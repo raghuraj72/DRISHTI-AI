@@ -1,0 +1,69 @@
+# DRISHTI-AI — .gitignore
+
+# Environment & Secrets
+.env
+*.env.local
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+.venv/
+venv/
+env/
+
+# Data directories (large files — track via DVC or cloud storage)
+data/
+detection/data/
+*.tif
+*.tiff
+*.geotiff
+*.h5
+*.pt
+*.onnx
+*.pth
+
+# MLflow artifacts
+mlruns/
+mlartifacts/
+
+# Node / React
+dashboard/node_modules/
+dashboard/dist/
+dashboard/.vite/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+logs/
+*.log
+
+# Docker volumes
+postgres_data/
+redis_data/
+
+# OS
+.DS_Store
+Thumbs.db
+.rocketride/
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.env
+.env.*
+!.env.example
+.streamlit/secrets.toml
+node_modules/
+dist/
+build/
