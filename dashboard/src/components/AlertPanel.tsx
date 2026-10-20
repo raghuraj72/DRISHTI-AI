@@ -79,16 +79,16 @@ export function AlertPanel() {
       </div>
 
       {/* Tabs */}
-      <div className="flex border-b border-slate-700 overflow-x-auto">
+      <div className="flex border-b border-slate-700/80 overflow-x-auto">
         {TABS.map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
             className={clsx(
-              'text-xs px-3 py-1.5 whitespace-nowrap transition-colors',
+              'text-xs px-3.5 py-2 whitespace-nowrap transition-colors font-bold tracking-wide',
               activeTab === tab
-                ? 'text-white border-b-2 border-blue-500 bg-slate-800'
-                : 'text-slate-400 hover:text-slate-200'
+                ? 'text-white border-b-2 border-cyan-500 bg-slate-800/90'
+                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/40'
             )}
           >
             {tab}
