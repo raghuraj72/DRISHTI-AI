@@ -102,17 +102,17 @@ export function EventDetailModal() {
     >
       <div
         className={clsx(
-          'relative w-full max-w-lg max-h-[85vh] overflow-y-auto bg-slate-900 rounded-xl border font-sans',
+          'relative w-full max-w-2xl max-h-[88vh] overflow-y-auto bg-slate-900 rounded-2xl border font-sans',
           'animate-fade-in text-slate-100 shadow-2xl',
           PRIORITY_GLOW[e.priority]
         )}
         onClick={(ev) => ev.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-start justify-between p-4 border-b border-slate-800">
-          <div className="flex items-center gap-3">
+        <div className="flex items-start justify-between p-5 border-b border-slate-800">
+          <div className="flex items-center gap-3.5">
             <div
-              className={clsx('p-2 rounded-lg', {
+              className={clsx('p-2.5 rounded-xl', {
                 'bg-red-900/50 text-red-400': e.priority === 'CRITICAL',
                 'bg-orange-900/50 text-orange-400': e.priority === 'HIGH',
                 'bg-yellow-900/50 text-yellow-400': e.priority === 'MEDIUM',
@@ -122,30 +122,30 @@ export function EventDetailModal() {
               {THREAT_ICONS[e.threat_type]}
             </div>
             <div>
-              <div className="font-bold text-slate-100 text-sm font-mono tracking-wide">
+              <div className="font-extrabold text-slate-100 text-base font-mono tracking-wide">
                 [{e.priority}] {e.threat_type.replace(/_/g, ' ')}
               </div>
-              <div className="text-xs text-slate-400">
+              <div className="text-sm text-slate-400 mt-0.5">
                 {formatDistanceToNow(new Date(e.occurred_at), { addSuffix: true })}
               </div>
             </div>
           </div>
           <button
             onClick={() => selectEvent(null)}
-            className="text-slate-400 hover:text-slate-200 transition p-1 rounded"
+            className="text-slate-400 hover:text-slate-200 transition p-1.5 rounded-lg hover:bg-slate-800"
           >
-            <X size={18} />
+            <X size={22} />
           </button>
         </div>
 
         {/* Body */}
-        <div className="p-4 space-y-4 text-xs">
+        <div className="p-5 space-y-5 text-sm">
           {/* Threat Score Bar */}
           <div>
-            <div className="flex justify-between text-slate-400 mb-1 font-mono">
-              <span>CORRELATED THREAT SCORE</span>
+            <div className="flex justify-between text-slate-400 mb-1.5 font-mono text-xs">
+              <span className="font-semibold">CORRELATED THREAT SCORE</span>
               <span
-                className={clsx('font-bold', {
+                className={clsx('font-bold text-sm', {
                   'text-red-400': e.priority === 'CRITICAL',
                   'text-orange-400': e.priority === 'HIGH',
                   'text-yellow-400': e.priority === 'MEDIUM',
@@ -155,7 +155,7 @@ export function EventDetailModal() {
                 {threatScore}%
               </span>
             </div>
-            <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
+            <div className="h-2.5 bg-slate-800 rounded-full overflow-hidden">
               <div
                 className={clsx('h-full rounded-full transition-all', {
                   'bg-red-500': e.priority === 'CRITICAL',
@@ -169,36 +169,36 @@ export function EventDetailModal() {
           </div>
 
           {/* Coordinates & Target Data */}
-          <div className="grid grid-cols-2 gap-2 bg-slate-950/60 border border-slate-800 p-2.5 rounded-lg font-mono">
+          <div className="grid grid-cols-2 gap-3 bg-slate-950/60 border border-slate-800 p-3.5 rounded-xl font-mono">
             <div>
-              <div className="text-slate-400 text-[10px] flex items-center gap-1">
-                <MapPin size={12} className="text-cyan-400" />
-                <span>COORDINATES</span>
+              <div className="text-slate-400 text-xs flex items-center gap-1.5">
+                <MapPin size={14} className="text-cyan-400" />
+                <span className="font-semibold">COORDINATES</span>
               </div>
-              <div className="text-slate-200 font-semibold mt-0.5">
+              <div className="text-slate-200 font-bold text-sm mt-1">
                 {e.location.lat.toFixed(4)}°N, {e.location.lon.toFixed(4)}°E
               </div>
             </div>
             <div>
-              <div className="text-slate-400 text-[10px] flex items-center gap-1">
-                <Users size={12} className="text-amber-400" />
-                <span>CONFIRMED ENTITIES</span>
+              <div className="text-slate-400 text-xs flex items-center gap-1.5">
+                <Users size={14} className="text-amber-400" />
+                <span className="font-semibold">CONFIRMED ENTITIES</span>
               </div>
-              <div className="text-slate-200 font-semibold mt-0.5">{e.entity_count} Target(s)</div>
+              <div className="text-slate-200 font-bold text-sm mt-1">{e.entity_count} Target(s)</div>
             </div>
           </div>
 
           {/* Modalities */}
           <div>
-            <div className="text-slate-400 mb-1.5 font-mono text-[10px] uppercase tracking-wider">
+            <div className="text-slate-400 mb-2 font-mono text-xs uppercase tracking-wider font-semibold">
               Corroborating Modalities
             </div>
-            <div className="flex flex-wrap gap-1.5">
+            <div className="flex flex-wrap gap-2">
               {(Array.isArray(e.modalities) ? e.modalities : [e.modalities]).map((mod) => (
                 <span
                   key={mod}
                   className={clsx(
-                    'text-[10px] px-2 py-0.5 rounded font-mono font-medium',
+                    'text-xs px-3 py-1 rounded-md font-mono font-bold',
                     MODALITY_COLORS[mod] ?? 'bg-slate-800 text-slate-300'
                   )}
                 >
@@ -210,59 +210,59 @@ export function EventDetailModal() {
 
           {/* Description */}
           {e.description && (
-            <div className="bg-slate-950/40 border border-slate-800 p-2.5 rounded-lg">
-              <div className="text-slate-400 text-[10px] font-mono uppercase mb-1">Telemetry Assessment</div>
-              <p className="text-slate-300 leading-relaxed">{e.description}</p>
+            <div className="bg-slate-950/40 border border-slate-800 p-3.5 rounded-xl">
+              <div className="text-slate-400 text-xs font-mono uppercase mb-1.5 font-semibold">Telemetry Assessment</div>
+              <p className="text-slate-200 leading-relaxed text-sm">{e.description}</p>
             </div>
           )}
 
           {/* Tactical Intercept Vector Calculator Drawer */}
-          <div className="border border-cyan-500/30 rounded-lg p-3 bg-cyan-950/20">
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-1.5 text-cyan-300 font-mono font-bold">
-                <Compass className="w-4 h-4 text-cyan-400" />
+          <div className="border border-cyan-500/30 rounded-xl p-4 bg-cyan-950/20">
+            <div className="flex items-center justify-between mb-2.5">
+              <div className="flex items-center gap-2 text-cyan-300 font-mono font-bold text-sm">
+                <Compass className="w-5 h-5 text-cyan-400" />
                 <span>TACTICAL INTERCEPT CALCULATOR</span>
               </div>
               <button
                 onClick={() => setShowIntercept(!showIntercept)}
-                className="text-[11px] font-mono text-cyan-400 hover:text-cyan-200 underline"
+                className="text-xs font-mono font-semibold text-cyan-400 hover:text-cyan-200 underline"
               >
                 {showIntercept ? 'Hide Solution' : 'Compute Intercept'}
               </button>
             </div>
 
             {showIntercept && (
-              <div className="space-y-2 pt-2 border-t border-cyan-500/20 font-mono text-[11px]">
+              <div className="space-y-2.5 pt-3 border-t border-cyan-500/20 font-mono text-xs">
                 <div className="flex justify-between text-slate-300">
                   <span>Nearest Strategic Hub:</span>
                   <strong className="text-slate-100">{nearestBase.name}</strong>
                 </div>
                 <div className="flex justify-between text-slate-300">
                   <span>Vector Distance:</span>
-                  <strong className="text-amber-400">{minDistance.toFixed(1)} km</strong>
+                  <strong className="text-amber-400 text-sm">{minDistance.toFixed(1)} km</strong>
                 </div>
-                <div className="grid grid-cols-2 gap-2 mt-2 pt-2 border-t border-slate-800">
-                  <div className="bg-slate-900 p-2 rounded border border-slate-800">
-                    <div className="text-[10px] text-slate-400 flex items-center gap-1">
-                      <Clock className="w-3 h-3 text-cyan-400" />
-                      <span>AIR INTERCEPT (IAF)</span>
+                <div className="grid grid-cols-2 gap-3 mt-2.5 pt-2.5 border-t border-slate-800">
+                  <div className="bg-slate-900 p-3 rounded-lg border border-slate-800">
+                    <div className="text-xs text-slate-400 flex items-center gap-1.5">
+                      <Clock className="w-3.5 h-3.5 text-cyan-400" />
+                      <span className="font-semibold">AIR INTERCEPT (IAF)</span>
                     </div>
-                    <div className="text-sm font-bold text-cyan-300 mt-0.5">{jetMinutes} mins</div>
-                    <div className="text-[9px] text-slate-400">Scramble @ Mach 1.2</div>
+                    <div className="text-base font-extrabold text-cyan-300 mt-1">{jetMinutes} mins</div>
+                    <div className="text-[10px] text-slate-400">Scramble @ Mach 1.2</div>
                   </div>
-                  <div className="bg-slate-900 p-2 rounded border border-slate-800">
-                    <div className="text-[10px] text-slate-400 flex items-center gap-1">
-                      <Navigation className="w-3 h-3 text-emerald-400" />
-                      <span>GROUND QRT / PATROL</span>
+                  <div className="bg-slate-900 p-3 rounded-lg border border-slate-800">
+                    <div className="text-xs text-slate-400 flex items-center gap-1.5">
+                      <Navigation className="w-3.5 h-3.5 text-emerald-400" />
+                      <span className="font-semibold">GROUND QRT / PATROL</span>
                     </div>
-                    <div className="text-sm font-bold text-emerald-300 mt-0.5">{qrtMinutes} mins</div>
-                    <div className="text-[9px] text-slate-400">Response @ 80 km/h</div>
+                    <div className="text-base font-extrabold text-emerald-300 mt-1">{qrtMinutes} mins</div>
+                    <div className="text-[10px] text-slate-400">Response @ 80 km/h</div>
                   </div>
                 </div>
 
-                <div className="bg-slate-900/90 p-2 rounded border border-red-500/30 flex items-start gap-1.5 text-red-300 mt-2">
-                  <ShieldAlert className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
-                  <div className="text-[10px] leading-relaxed">
+                <div className="bg-slate-900/90 p-3 rounded-lg border border-red-500/30 flex items-start gap-2 text-red-300 mt-2.5">
+                  <ShieldAlert className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
+                  <div className="text-xs leading-relaxed">
                     <strong>Recommended SOP:</strong> Dispatch Quick Reaction Team (QRT) Vector Alpha. Alert forward observation post to illuminate target using laser designator / EO tracking.
                   </div>
                 </div>
@@ -271,7 +271,7 @@ export function EventDetailModal() {
           </div>
 
           {/* Timestamp */}
-          <div className="text-[10px] text-slate-500 font-mono border-t border-slate-800 pt-2 flex justify-between">
+          <div className="text-xs text-slate-500 font-mono border-t border-slate-800 pt-3 flex justify-between">
             <span>TIMESTAMP: {format(new Date(e.occurred_at), 'dd MMM yyyy HH:mm:ss')} UTC</span>
             <span className="text-emerald-500 font-bold">VERIFIED TARGET</span>
           </div>

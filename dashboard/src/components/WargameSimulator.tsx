@@ -116,51 +116,51 @@ export function WargameSimulator({ isOpen, onClose }: Props) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="bg-slate-900 border border-red-500/40 rounded-xl shadow-2xl max-w-2xl w-full p-6 text-slate-100 flex flex-col gap-4 font-mono">
+    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+      <div className="bg-slate-900 border border-red-500/40 rounded-2xl shadow-2xl max-w-4xl w-full p-7 text-slate-100 flex flex-col gap-5 font-mono">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-          <div className="flex items-center gap-2">
-            <span className="w-3 h-3 rounded-full bg-red-500 animate-pulse" />
-            <h2 className="text-base font-bold tracking-wider text-red-400 uppercase">
+        <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+          <div className="flex items-center gap-3">
+            <span className="w-3.5 h-3.5 rounded-full bg-red-500 animate-pulse" />
+            <h2 className="text-lg font-extrabold tracking-wider text-red-400 uppercase">
               Tactical Wargame Scenario Simulator
             </h2>
           </div>
           <button
             onClick={onClose}
-            className="p-1 rounded hover:bg-slate-800 text-slate-400 hover:text-slate-100 transition"
+            className="p-1.5 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-slate-100 transition"
           >
-            <X className="w-5 h-5" />
+            <X className="w-6 h-6" />
           </button>
         </div>
 
-        <p className="text-xs text-slate-400 font-sans">
+        <p className="text-sm text-slate-300 font-sans leading-relaxed">
           Trigger live, simulated multi-modal threat events across India's frontiers. Events are immediately injected into the
           live Kafka pipeline, persisted in PostGIS, evaluated by the Threat Escalation Engine, and briefed by Gemini 3.8 Flash.
         </p>
 
         {lastExecuted && (
-          <div className="flex items-center gap-2 bg-emerald-950/60 border border-emerald-500/50 text-emerald-300 text-xs px-3 py-2 rounded-lg">
-            <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+          <div className="flex items-center gap-2.5 bg-emerald-950/60 border border-emerald-500/50 text-emerald-300 text-sm px-4 py-2.5 rounded-xl">
+            <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
             <span>Scenario <strong>&ldquo;{lastExecuted}&rdquo;</strong> injected into live command pipeline. Map marker & alert updated.</span>
           </div>
         )}
 
         {/* Scenarios List */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-1">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-1">
           {SCENARIOS.map((s) => (
             <div
               key={s.id}
-              className="bg-slate-950/70 border border-slate-800 hover:border-slate-700 rounded-lg p-3 flex flex-col justify-between gap-3 transition"
+              className="bg-slate-950/70 border border-slate-800 hover:border-slate-700 rounded-xl p-4 flex flex-col justify-between gap-3.5 transition"
             >
               <div>
-                <div className="flex items-center justify-between mb-1">
-                  <div className="flex items-center gap-1.5 font-bold text-sm text-slate-200">
+                <div className="flex items-center justify-between mb-1.5">
+                  <div className="flex items-center gap-2 font-bold text-base text-slate-200">
                     {s.icon}
                     <span>{s.name}</span>
                   </div>
                   <span
-                    className={`text-[10px] px-1.5 py-0.5 rounded font-bold ${
+                    className={`text-xs px-2 py-0.5 rounded font-extrabold ${
                       s.severity === 'CRITICAL'
                         ? 'bg-red-950 text-red-400 border border-red-800'
                         : 'bg-amber-950 text-amber-400 border border-amber-800'
@@ -169,11 +169,11 @@ export function WargameSimulator({ isOpen, onClose }: Props) {
                     {s.severity}
                   </span>
                 </div>
-                <div className="text-[11px] text-cyan-400 font-sans font-medium mb-1.5">{s.sector}</div>
-                <p className="text-[11px] text-slate-400 font-sans leading-relaxed line-clamp-2">{s.desc}</p>
-                <div className="flex flex-wrap gap-1 mt-2">
+                <div className="text-xs text-cyan-400 font-sans font-semibold mb-1.5">{s.sector}</div>
+                <p className="text-xs text-slate-300 font-sans leading-relaxed line-clamp-2">{s.desc}</p>
+                <div className="flex flex-wrap gap-1.5 mt-2.5">
                   {s.modalities.map((m) => (
-                    <span key={m} className="text-[9px] bg-slate-800 text-slate-300 px-1.5 py-0.5 rounded">
+                    <span key={m} className="text-[11px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded font-mono font-medium">
                       {m}
                     </span>
                   ))}
@@ -183,16 +183,16 @@ export function WargameSimulator({ isOpen, onClose }: Props) {
               <button
                 onClick={() => handleRunScenario(s)}
                 disabled={runningId === s.id}
-                className="w-full flex items-center justify-center gap-1.5 bg-red-600/90 hover:bg-red-500 text-white font-sans font-semibold text-xs py-2 px-3 rounded shadow transition disabled:opacity-50"
+                className="w-full flex items-center justify-center gap-2 bg-red-600/90 hover:bg-red-500 text-white font-sans font-bold text-sm py-2.5 px-4 rounded-xl shadow transition disabled:opacity-50"
               >
                 {runningId === s.id ? (
                   <>
-                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    <Loader2 className="w-4 h-4 animate-spin" />
                     <span>Injecting Stream...</span>
                   </>
                 ) : (
                   <>
-                    <Play className="w-3.5 h-3.5 fill-current" />
+                    <Play className="w-4 h-4 fill-current" />
                     <span>Execute Threat Simulation</span>
                   </>
                 )}
@@ -201,10 +201,10 @@ export function WargameSimulator({ isOpen, onClose }: Props) {
           ))}
         </div>
 
-        <div className="flex justify-end pt-2 border-t border-slate-800">
+        <div className="flex justify-end pt-3 border-t border-slate-800">
           <button
             onClick={onClose}
-            className="text-xs font-sans text-slate-400 hover:text-slate-200 px-4 py-1.5 rounded transition"
+            className="text-sm font-sans font-semibold text-slate-300 hover:text-white px-5 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 transition"
           >
             Close Simulation Deck
           </button>

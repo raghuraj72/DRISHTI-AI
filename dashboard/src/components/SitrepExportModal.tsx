@@ -29,11 +29,11 @@ export function SitrepExportModal({ isOpen, onClose }: Props) {
 
   return (
     <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-      <div className="bg-slate-900 border border-slate-700 rounded-xl max-w-4xl w-full my-8 text-slate-100 flex flex-col shadow-2xl font-sans">
+      <div className="bg-slate-900 border border-slate-700 rounded-2xl max-w-5xl w-full my-8 text-slate-100 flex flex-col shadow-2xl font-sans">
         {/* Top Control Bar (Hidden during print) */}
-        <div className="flex items-center justify-between p-4 bg-slate-950 border-b border-slate-800 print:hidden">
+        <div className="flex items-center justify-between p-5 bg-slate-950 border-b border-slate-800 print:hidden">
           <div className="flex items-center gap-2">
-            <span className="text-xs font-mono font-bold uppercase tracking-wider text-cyan-400">
+            <span className="text-sm font-mono font-extrabold uppercase tracking-wider text-cyan-400">
               OFFICIAL SITREP GENERATOR // MO-IDS-DRISHTI-2026
             </span>
           </div>
@@ -41,22 +41,22 @@ export function SitrepExportModal({ isOpen, onClose }: Props) {
           <div className="flex items-center gap-3">
             <button
               onClick={handlePrint}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-cyan-600 hover:bg-cyan-500 text-slate-950 text-xs font-bold rounded shadow transition"
+              className="flex items-center gap-2 px-4 py-2 bg-cyan-600 hover:bg-cyan-500 text-slate-950 text-sm font-bold rounded-lg shadow transition"
             >
               <Printer className="w-4 h-4" />
               <span>Print / Save as PDF</span>
             </button>
             <button
               onClick={onClose}
-              className="p-1.5 rounded hover:bg-slate-800 text-slate-400 hover:text-slate-100 transition"
+              className="p-1.5 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-slate-100 transition"
             >
-              <X className="w-5 h-5" />
+              <X className="w-6 h-6" />
             </button>
           </div>
         </div>
 
         {/* Printable Document Area */}
-        <div className="p-8 bg-slate-950 text-slate-200 print:bg-white print:text-black print:p-6 space-y-6 font-mono text-xs">
+        <div className="p-8 bg-slate-950 text-slate-200 print:bg-white print:text-black print:p-6 space-y-6 font-mono text-sm">
           {/* Document Header */}
           <div className="border-b-2 border-slate-700 print:border-black pb-4 text-center">
             <div className="text-[10px] tracking-widest text-red-400 print:text-red-700 font-bold uppercase">

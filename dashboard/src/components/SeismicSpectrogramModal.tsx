@@ -16,33 +16,33 @@ export function SeismicSpectrogramModal({ isOpen, onClose }: Props) {
 
   return (
     <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="bg-slate-900 border border-yellow-500/40 rounded-xl shadow-2xl max-w-4xl w-full p-6 text-slate-100 flex flex-col gap-4 font-mono">
+      <div className="bg-slate-900 border border-yellow-500/40 rounded-2xl shadow-2xl max-w-5xl w-full p-7 text-slate-100 flex flex-col gap-5 font-mono">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-          <div className="flex items-center gap-2">
-            <Zap className="w-5 h-5 text-yellow-400 animate-pulse" />
+        <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+          <div className="flex items-center gap-3">
+            <Zap className="w-6 h-6 text-yellow-400 animate-pulse" />
             <div>
-              <h2 className="text-base font-bold tracking-wider text-yellow-400 uppercase">
+              <h2 className="text-lg font-extrabold tracking-wider text-yellow-400 uppercase">
                 SUBTERRANEAN ACOUSTIC & SEISMIC SPECTRAL ANALYZER
               </h2>
-              <div className="text-[11px] text-slate-400 font-sans">
+              <div className="text-xs text-slate-400 font-sans mt-0.5">
                 USGS FDSN + 3-Axis Geophone Cross-Spectral Micro-Vibration Classifier
               </div>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1 rounded hover:bg-slate-800 text-slate-400 hover:text-slate-100 transition"
+            className="p-1.5 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-slate-100 transition"
           >
-            <X className="w-5 h-5" />
+            <X className="w-6 h-6" />
           </button>
         </div>
 
         {/* Signature Selector Tabs */}
-        <div className="flex gap-2 border-b border-slate-800 pb-2">
+        <div className="flex flex-wrap gap-2.5 border-b border-slate-800 pb-3">
           <button
             onClick={() => setActiveSig('TUNNELING')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 ${
+            className={`px-4 py-2 rounded-xl text-sm font-bold transition flex items-center gap-2 ${
               activeSig === 'TUNNELING'
                 ? 'bg-red-950 border border-red-500 text-red-300 shadow'
                 : 'bg-slate-950 border border-slate-800 text-slate-400 hover:text-slate-200'
@@ -54,7 +54,7 @@ export function SeismicSpectrogramModal({ isOpen, onClose }: Props) {
 
           <button
             onClick={() => setActiveSig('ARMOR_VEHICLE')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 ${
+            className={`px-4 py-2 rounded-xl text-sm font-bold transition flex items-center gap-2 ${
               activeSig === 'ARMOR_VEHICLE'
                 ? 'bg-amber-950 border border-amber-500 text-amber-300 shadow'
                 : 'bg-slate-950 border border-slate-800 text-slate-400 hover:text-slate-200'
@@ -66,7 +66,7 @@ export function SeismicSpectrogramModal({ isOpen, onClose }: Props) {
 
           <button
             onClick={() => setActiveSig('EARTHQUAKE')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 ${
+            className={`px-4 py-2 rounded-xl text-sm font-bold transition flex items-center gap-2 ${
               activeSig === 'EARTHQUAKE'
                 ? 'bg-blue-950 border border-blue-500 text-blue-300 shadow'
                 : 'bg-slate-950 border border-slate-800 text-slate-400 hover:text-slate-200'
@@ -272,14 +272,14 @@ export function SeismicSpectrogramModal({ isOpen, onClose }: Props) {
         </div>
 
         {/* Footer */}
-        <div className="flex justify-between items-center pt-2 border-t border-slate-800 text-xs font-sans text-slate-400">
-          <div className="flex items-center gap-1.5 text-emerald-400">
+        <div className="flex justify-between items-center pt-3 border-t border-slate-800 text-sm font-sans text-slate-300">
+          <div className="flex items-center gap-2 text-emerald-400">
             <CheckCircle2 className="w-4 h-4" />
             <span>Multi-modal corroboration with Sentinel-2 surface change passes active</span>
           </div>
           <button
             onClick={onClose}
-            className="px-4 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs rounded transition"
+            className="px-5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-semibold rounded-lg transition"
           >
             Close Spectral Analyzer
           </button>
