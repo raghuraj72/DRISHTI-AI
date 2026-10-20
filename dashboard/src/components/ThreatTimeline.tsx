@@ -80,39 +80,39 @@ export function ThreatTimeline() {
   return (
     <div className={clsx(
       'bg-slate-900/95 border-t border-slate-700 transition-all duration-300',
-      collapsed ? 'h-11' : 'h-64'
+      collapsed ? 'h-14' : 'h-[360px]'
     )}>
       <div
-        className="flex items-center justify-between px-4 py-3 cursor-pointer border-b border-slate-700 hover:bg-slate-800/60"
+        className="flex items-center justify-between px-5 py-3.5 cursor-pointer border-b border-slate-700 hover:bg-slate-800/60"
         onClick={() => setCollapsed((c) => !c)}
       >
-        <div className="flex items-center gap-2.5">
-          <Activity size={18} className="text-purple-400" />
-          <span className="text-sm font-extrabold text-slate-100 tracking-wider font-mono">THREAT TIMELINE (24H)</span>
+        <div className="flex items-center gap-3">
+          <Activity size={24} className="text-purple-400" />
+          <span className="text-base sm:text-lg font-black text-slate-100 tracking-wider font-mono">THREAT TIMELINE (24H)</span>
         </div>
-        {collapsed ? <ChevronUp size={18} className="text-slate-300" /> : <ChevronDown size={18} className="text-slate-300" />}
+        {collapsed ? <ChevronUp size={22} className="text-slate-300" /> : <ChevronDown size={22} className="text-slate-300" />}
       </div>
 
       {!collapsed && (
-        <div className="h-48 px-3 py-2">
+        <div className="h-[285px] px-4 py-3">
           {chartData.length === 0 ? (
-            <div className="flex items-center justify-center h-full text-slate-400 text-sm font-mono">
+            <div className="flex items-center justify-center h-full text-slate-400 text-base font-mono">
               No data yet — events will appear as they are detected.
             </div>
           ) : (
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={chartData} margin={{ top: 8, right: 12, left: -10, bottom: 0 }}>
+              <AreaChart data={chartData} margin={{ top: 12, right: 16, left: -5, bottom: 4 }}>
                 <XAxis
                   dataKey="hour"
-                  tick={{ fontSize: 12, fill: '#94a3b8' }}
+                  tick={{ fontSize: 13, fill: '#94a3b8', fontWeight: 600 }}
                   tickLine={false}
                   axisLine={false}
                 />
-                <YAxis tick={{ fontSize: 12, fill: '#94a3b8' }} tickLine={false} axisLine={false} />
+                <YAxis tick={{ fontSize: 13, fill: '#94a3b8', fontWeight: 600 }} tickLine={false} axisLine={false} />
                 <Tooltip
-                  contentStyle={{ background: '#0f172a', border: '1px solid #334155', fontSize: 13, borderRadius: '8px' }}
+                  contentStyle={{ background: '#0f172a', border: '1px solid #334155', fontSize: 14, borderRadius: '10px' }}
                 />
-                <Legend iconSize={12} wrapperStyle={{ fontSize: 12, paddingTop: '4px' }} />
+                <Legend iconSize={14} wrapperStyle={{ fontSize: 13, paddingTop: '6px', fontWeight: 700 }} />
                 {types.map((type) => (
                   <Area
                     key={type}
@@ -122,7 +122,7 @@ export function ThreatTimeline() {
                     stroke={THREAT_COLORS[type] ?? '#64748b'}
                     fill={THREAT_COLORS[type] ?? '#64748b'}
                     fillOpacity={0.35}
-                    strokeWidth={2}
+                    strokeWidth={2.5}
                   />
                 ))}
               </AreaChart>

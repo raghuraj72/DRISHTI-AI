@@ -322,18 +322,18 @@ export function MapView() {
       />
 
       {/* Sector Fly-To Toolbar Overlay (Top-Center) */}
-      <div className="absolute top-4 left-1/2 -translate-x-1/2 z-10 flex items-center gap-2 bg-slate-950/95 backdrop-blur-md border border-cyan-500/50 p-2.5 rounded-2xl shadow-2xl font-mono text-sm">
-        <span className="text-cyan-400 font-black px-3 flex items-center gap-2 text-sm sm:text-base">
-          <Compass className="w-5 h-5 animate-spin-slow" />
+      <div className="absolute top-5 left-1/2 -translate-x-1/2 z-10 flex items-center gap-2.5 bg-slate-950/95 backdrop-blur-md border-2 border-cyan-500/60 p-3.5 rounded-3xl shadow-2xl font-mono text-base">
+        <span className="text-cyan-400 font-black px-4 flex items-center gap-2.5 text-base sm:text-lg">
+          <Compass className="w-6 h-6 animate-spin-slow" />
           <span>SECTORS:</span>
         </span>
         {SECTORS.map((s) => (
           <button
             key={s.name}
             onClick={() => handleFlyToSector(s)}
-            className={`px-4 py-2 rounded-xl transition text-xs sm:text-sm font-extrabold tracking-wider ${
+            className={`px-5 py-3 rounded-2xl transition text-sm sm:text-base font-black tracking-wider ${
               activeSector === s.name
-                ? 'bg-cyan-500 text-slate-950 shadow-xl scale-105'
+                ? 'bg-cyan-500 text-slate-950 shadow-2xl scale-105'
                 : 'text-slate-300 hover:text-white hover:bg-slate-800/90 border border-slate-800 hover:border-slate-600'
             }`}
           >
@@ -343,26 +343,26 @@ export function MapView() {
       </div>
 
       {/* Tactical Map Layer Controls (Top-Right under controls) */}
-      <div className="absolute top-16 right-4 z-10 flex flex-col gap-2.5 bg-slate-950/95 backdrop-blur-md border border-slate-700 p-3 rounded-2xl shadow-2xl font-mono text-sm text-slate-200">
+      <div className="absolute top-20 right-4 z-10 flex flex-col gap-3 bg-slate-950/95 backdrop-blur-md border border-slate-700 p-4 rounded-3xl shadow-2xl font-mono text-base text-slate-200">
         <button
           onClick={() => setShowRadarRings(!showRadarRings)}
-          className={`flex items-center gap-2.5 px-4 py-2 rounded-xl border text-xs sm:text-sm font-bold transition shadow-md ${
+          className={`flex items-center gap-3 px-5 py-3 rounded-2xl border text-sm sm:text-base font-black transition shadow-lg ${
             showRadarRings
               ? 'bg-cyan-950/90 border-cyan-500/80 text-cyan-300'
               : 'bg-slate-900 border-slate-700 text-slate-400 hover:text-slate-200'
           }`}
           title="Toggle 100km & 200km tactical radar detection rings around frontline air defense hubs"
         >
-          <Radio className="w-5 h-5 text-cyan-400" />
+          <Radio className="w-6 h-6 text-cyan-400" />
           <span>Radar Rings: {showRadarRings ? 'ON' : 'OFF'}</span>
         </button>
 
         <button
           onClick={toggleMapStyle}
-          className="flex items-center gap-2.5 px-4 py-2 rounded-xl border border-slate-700 bg-slate-900 hover:bg-slate-800 text-xs sm:text-sm font-bold text-slate-200 hover:text-white transition shadow-md"
+          className="flex items-center gap-3 px-5 py-3 rounded-2xl border border-slate-700 bg-slate-900 hover:bg-slate-800 text-sm sm:text-base font-black text-slate-200 hover:text-white transition shadow-lg"
           title="Switch between high-resolution satellite imagery and high-contrast tactical dark mode"
         >
-          <Layers className="w-5 h-5 text-amber-400" />
+          <Layers className="w-6 h-6 text-amber-400" />
           <span>Style: {mapStyle === 'satellite' ? 'Satellite' : 'Tactical Dark'}</span>
         </button>
       </div>

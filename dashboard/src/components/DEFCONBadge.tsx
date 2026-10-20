@@ -37,11 +37,11 @@ export function DEFCONBadge() {
 
   return (
     <div
-      className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg border text-xs sm:text-sm font-mono tracking-wider font-bold shadow-md ${badgeColor}`}
+      className={`flex items-center gap-2.5 px-5 py-2.5 rounded-2xl border text-sm sm:text-base font-mono tracking-wider font-black shadow-lg ${badgeColor}`}
       title="Dynamic Defense Readiness Condition computed from live multi-modal border threats"
     >
-      <span className={`w-2.5 h-2.5 rounded-full ${dotColor} ${defcon <= 2 ? 'animate-ping' : ''}`} />
-      {defcon <= 2 ? <ShieldAlert className="w-4 h-4 text-red-400" /> : <ShieldCheck className="w-4 h-4" />}
+      <span className={`w-3.5 h-3.5 rounded-full ${dotColor} ${defcon <= 2 ? 'animate-ping' : ''}`} />
+      {defcon <= 2 ? <ShieldAlert className="w-5 h-5 text-red-400" /> : <ShieldCheck className="w-5 h-5" />}
       <span>{statusText}</span>
     </div>
   );

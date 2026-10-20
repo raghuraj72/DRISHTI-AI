@@ -82,17 +82,17 @@ export function StatsBar({
   ].filter((d) => d.value > 0);
 
   return (
-    <div className="flex items-center gap-3.5 bg-slate-950/95 border-b border-slate-800 px-5 py-2.5 select-none z-20">
+    <div className="flex items-center gap-4 bg-slate-950/95 border-b border-slate-800 px-6 py-3.5 select-none z-20">
       {/* Brand Logo */}
-      <div className="flex items-center gap-2.5 mr-2">
-        <div className="p-1.5 rounded-lg bg-red-950 border border-red-500/60 shadow-md">
-          <AlertTriangle size={22} className="text-red-500 animate-pulse" />
+      <div className="flex items-center gap-3 mr-2">
+        <div className="p-2.5 rounded-xl bg-red-950 border border-red-500/70 shadow-lg">
+          <AlertTriangle size={30} className="text-red-500 animate-pulse" />
         </div>
         <div>
-          <span className="font-black text-lg sm:text-xl text-slate-100 tracking-widest uppercase font-mono">
+          <span className="font-black text-2xl sm:text-3xl text-slate-100 tracking-widest uppercase font-mono">
             DRISHTI<span className="text-red-500">-AI</span>
           </span>
-          <span className="hidden lg:inline text-xs text-cyan-300 font-mono font-bold ml-2.5 border border-cyan-700/80 bg-cyan-950/60 px-2 py-0.5 rounded shadow-sm">
+          <span className="hidden lg:inline text-sm text-cyan-300 font-mono font-bold ml-3 border border-cyan-600/80 bg-cyan-950/70 px-3 py-1 rounded-lg shadow-md">
             RYIC 2026 TRL-8
           </span>
         </div>
@@ -108,16 +108,16 @@ export function StatsBar({
 
       {/* Mini Pie chart */}
       {pieData.length > 0 && (
-        <div className="hidden xl:block w-16 h-11">
+        <div className="hidden xl:block w-20 h-14">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
-              <Pie data={pieData} dataKey="value" cx="50%" cy="50%" outerRadius={19} strokeWidth={0}>
+              <Pie data={pieData} dataKey="value" cx="50%" cy="50%" outerRadius={24} strokeWidth={0}>
                 {pieData.map((entry) => (
                   <Cell key={entry.name} fill={THREAT_COLORS[entry.name] ?? '#64748b'} />
                 ))}
               </Pie>
               <Tooltip
-                contentStyle={{ background: '#0f172a', border: '1px solid #1e293b', fontSize: 12 }}
+                contentStyle={{ background: '#0f172a', border: '1px solid #1e293b', fontSize: 13 }}
                 formatter={(v: number, name: string) => [v, name]}
               />
             </PieChart>
@@ -133,92 +133,92 @@ export function StatsBar({
         {/* Audio HUD Chime Mute/Unmute */}
         <button
           onClick={handleToggleAudio}
-          className={`p-2.5 rounded-xl border transition ${
+          className={`p-3 rounded-2xl border transition shadow-lg ${
             isMuted
               ? 'bg-slate-900 border-slate-700 text-slate-500 hover:text-slate-300'
               : 'bg-emerald-950/80 border-emerald-500/70 text-emerald-400 shadow-md'
           }`}
           title={isMuted ? 'Tactical Radar Audio Muted (Click to Unmute)' : 'Tactical Radar Audio Active (Click to Mute)'}
         >
-          {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
+          {isMuted ? <VolumeX size={24} /> : <Volume2 size={24} />}
         </button>
 
         {/* Multi-Modal Sensor Grid Telemetry Button */}
         <button
           onClick={onOpenSensors}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-950 hover:bg-emerald-900 border border-emerald-500/70 text-emerald-300 hover:text-emerald-100 text-sm font-mono font-extrabold tracking-wide transition shadow-md hover:scale-[1.02]"
+          className="flex items-center gap-2.5 px-5 py-3 rounded-2xl bg-emerald-950 hover:bg-emerald-900 border border-emerald-500/70 text-emerald-300 hover:text-emerald-100 text-base font-mono font-black tracking-wide transition shadow-lg hover:scale-[1.03]"
           title="Open Multi-Modal Sensor Grid Health & Ingestion Telemetry"
         >
-          <Activity size={18} className="text-emerald-400 animate-pulse" />
+          <Activity size={22} className="text-emerald-400 animate-pulse" />
           <span className="hidden sm:inline">SENSOR GRID</span>
         </button>
 
         {/* Subterranean Seismic FFT Analyzer Button */}
         <button
           onClick={onOpenSeismic}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-yellow-950 hover:bg-yellow-900 border border-yellow-500/70 text-yellow-300 hover:text-yellow-100 text-sm font-mono font-extrabold tracking-wide transition shadow-md hover:scale-[1.02]"
+          className="flex items-center gap-2.5 px-5 py-3 rounded-2xl bg-yellow-950 hover:bg-yellow-900 border border-yellow-500/70 text-yellow-300 hover:text-yellow-100 text-base font-mono font-black tracking-wide transition shadow-lg hover:scale-[1.03]"
           title="Open Subterranean Acoustic & Seismic Tunneling Frequency Analyzer"
         >
-          <Zap size={18} className="text-yellow-400" />
+          <Zap size={22} className="text-yellow-400" />
           <span className="hidden sm:inline">SEISMIC INTEL</span>
         </button>
 
         {/* Sentinel-2 Multi-Spectral Camouflage Inspector Button */}
         <button
           onClick={onOpenSatellite}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-blue-950 hover:bg-blue-900 border border-blue-500/70 text-blue-300 hover:text-blue-100 text-sm font-mono font-extrabold tracking-wide transition shadow-md hover:scale-[1.02]"
+          className="flex items-center gap-2.5 px-5 py-3 rounded-2xl bg-blue-950 hover:bg-blue-900 border border-blue-500/70 text-blue-300 hover:text-blue-100 text-base font-mono font-black tracking-wide transition shadow-lg hover:scale-[1.03]"
           title="Open Sentinel-2 Multi-Spectral Camouflage Defeat & Surface Change Inspector"
         >
-          <Satellite size={18} className="text-blue-400" />
+          <Satellite size={22} className="text-blue-400" />
           <span className="hidden sm:inline">SATELLITE INTEL</span>
         </button>
 
         {/* Wargame Simulator Button */}
         <button
           onClick={onOpenSimulator}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-red-950 hover:bg-red-900 border border-red-500/70 text-red-300 hover:text-red-100 text-sm font-mono font-extrabold tracking-wide transition shadow-md hover:scale-[1.02]"
+          className="flex items-center gap-2.5 px-5 py-3 rounded-2xl bg-red-950 hover:bg-red-900 border border-red-500/70 text-red-300 hover:text-red-100 text-base font-mono font-black tracking-wide transition shadow-lg hover:scale-[1.03]"
           title="Open Tactical Wargame Incursion Simulator (Jury Demo)"
         >
-          <Crosshair size={18} className="text-red-400" />
+          <Crosshair size={22} className="text-red-400" />
           <span className="hidden sm:inline">WARGAME SIM</span>
         </button>
 
         {/* Tactical AI Copilot Button */}
         <button
           onClick={onOpenCopilot}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-cyan-950 hover:bg-cyan-900 border border-cyan-500/70 text-cyan-300 hover:text-cyan-100 text-sm font-mono font-extrabold tracking-wide transition shadow-md hover:scale-[1.02]"
+          className="flex items-center gap-2.5 px-5 py-3 rounded-2xl bg-cyan-950 hover:bg-cyan-900 border border-cyan-500/70 text-cyan-300 hover:text-cyan-100 text-base font-mono font-black tracking-wide transition shadow-lg hover:scale-[1.03]"
           title="Open Drishti AI Tactical Copilot (Gemini 3.8 Flash)"
         >
-          <Bot size={18} className="text-cyan-400 animate-pulse" />
+          <Bot size={22} className="text-cyan-400 animate-pulse" />
           <span className="hidden sm:inline">AI COPILOT</span>
         </button>
 
         {/* SITREP Export Button */}
         <button
           onClick={onOpenSitrep}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-600 text-slate-200 hover:text-white text-sm font-mono font-extrabold tracking-wide transition shadow-md hover:scale-[1.02]"
+          className="flex items-center gap-2.5 px-5 py-3 rounded-2xl bg-slate-900 hover:bg-slate-800 border border-slate-600 text-slate-200 hover:text-white text-base font-mono font-black tracking-wide transition shadow-lg hover:scale-[1.03]"
           title="Export Official Military Situation Report (Print / PDF)"
         >
-          <FileText size={18} className="text-amber-400" />
+          <FileText size={22} className="text-amber-400" />
           <span className="hidden sm:inline">SITREP</span>
         </button>
       </div>
 
-      <div className="h-7 w-px bg-slate-800 mx-1 hidden sm:block" />
+      <div className="h-8 w-px bg-slate-800 mx-1 hidden sm:block" />
 
       {/* Clock */}
-      <span className="text-xs sm:text-sm text-slate-300 font-mono font-bold hidden md:inline">{clock}</span>
+      <span className="text-sm sm:text-base text-slate-300 font-mono font-bold hidden md:inline">{clock}</span>
 
       {/* Live / Offline WebSocket indicator */}
       <div
         className={clsx(
-          'flex items-center gap-2 text-xs sm:text-sm font-mono font-extrabold px-3 py-1.5 rounded-lg border shadow-sm',
+          'flex items-center gap-2.5 text-sm sm:text-base font-mono font-black px-4 py-2 rounded-xl border shadow-md',
           isConnected
             ? 'text-emerald-400 bg-emerald-950/60 border-emerald-500/60'
             : 'text-red-400 bg-red-950/60 border-red-500/60'
         )}
       >
-        {isConnected ? <Wifi size={15} /> : <WifiOff size={15} />}
+        {isConnected ? <Wifi size={18} /> : <WifiOff size={18} />}
         <span>{isConnected ? 'LIVE FEED' : 'OFFLINE'}</span>
       </div>
     </div>
@@ -227,9 +227,9 @@ export function StatsBar({
 
 function StatPill({ label, value, color }: { label: string; value: number; color: string }) {
   return (
-    <div className="flex flex-col items-center bg-slate-900 border border-slate-700/80 rounded-lg px-3.5 py-1 min-w-[76px] shadow-sm">
-      <span className={clsx('text-lg sm:text-xl font-black leading-tight font-mono', color)}>{value}</span>
-      <span className="text-[10px] text-slate-400 font-extrabold uppercase tracking-wider font-mono">{label}</span>
+    <div className="flex flex-col items-center bg-slate-900 border border-slate-700/80 rounded-xl px-4 py-1.5 min-w-[88px] shadow-sm">
+      <span className={clsx('text-xl sm:text-2xl font-black leading-tight font-mono', color)}>{value}</span>
+      <span className="text-[11px] text-slate-400 font-black uppercase tracking-wider font-mono">{label}</span>
     </div>
   );
 }
