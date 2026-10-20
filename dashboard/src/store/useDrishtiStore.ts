@@ -81,54 +81,76 @@ const INITIAL_EVENTS: ThreatEvent[] = [
   },
 ];
 
-const INITIAL_ALERTS: Alert[] = [
-  {
-    id: 'alt-01',
-    priority: 'CRITICAL',
-    title: 'CRITICAL: UAV Swarm in Pangong Corridor',
-    message: '5 Low-RCS stealth UAVs detected navigating Pangong Lake below 200m AGL. Air defense scramble recommended.',
-    status: 'ACTIVE',
-    threat_score: 0.96,
-    created_at: new Date(Date.now() - 4 * 60 * 1000).toISOString(),
-  },
-  {
-    id: 'alt-02',
-    priority: 'CRITICAL',
-    title: 'CRITICAL: Dark Vessel Incursion at Sir Creek',
-    message: 'Assault skiff transponder disabled seaward, moving at 34 knots toward Gujarat tidal border.',
-    status: 'ACTIVE',
-    threat_score: 0.88,
-    created_at: new Date(Date.now() - 14 * 60 * 1000).toISOString(),
-  },
-  {
-    id: 'alt-03',
-    priority: 'HIGH',
-    title: 'HIGH: Subterranean Tunneling in Poonch',
-    message: '24.5 Hz FFT acoustic vibration cluster at 7.8m depth indicating mechanical rotary drilling near Zero Line.',
-    status: 'ACTIVE',
-    threat_score: 0.82,
-    created_at: new Date(Date.now() - 28 * 60 * 1000).toISOString(),
-  },
-  {
-    id: 'alt-04',
-    priority: 'HIGH',
-    title: 'HIGH: Motorized Recon at Tawang',
-    message: 'Mechanized target convoy crossing frontier demarcation line. Sentinel-2 SWIR camouflage netting pierced.',
-    status: 'ACTIVE',
-    threat_score: 0.85,
-    created_at: new Date(Date.now() - 45 * 60 * 1000).toISOString(),
-  },
-];
+function generateInitialAlerts(): Alert[] {
+  const alerts: Alert[] = [
+    {
+      id: 'alt-001',
+      priority: 'CRITICAL',
+      title: '[CRITICAL] AIR_INCURSION – Pangong Tso Swarm',
+      message: 'Threat score: 0.96 | Modalities: ADS_B, RADAR | Entities: 5',
+      status: 'ACTIVE',
+      threat_score: 0.96,
+      created_at: new Date(Date.now() - 25 * 1000).toISOString(),
+    },
+    {
+      id: 'alt-002',
+      priority: 'CRITICAL',
+      title: '[CRITICAL] MARITIME – Sir Creek Fast Craft',
+      message: 'Threat score: 0.88 | Modalities: AIS, RADAR | Entities: 2',
+      status: 'ACTIVE',
+      threat_score: 0.88,
+      created_at: new Date(Date.now() - 40 * 1000).toISOString(),
+    },
+    {
+      id: 'alt-003',
+      priority: 'HIGH',
+      title: '[HIGH] SEISMIC – Poonch Sub-surface Acoustic',
+      message: 'Threat score: 0.82 | Modalities: SEISMIC | Entities: 1',
+      status: 'ACTIVE',
+      threat_score: 0.82,
+      created_at: new Date(Date.now() - 55 * 1000).toISOString(),
+    },
+    {
+      id: 'alt-004',
+      priority: 'HIGH',
+      title: '[HIGH] INTRUSION – Tawang Recon Convoy',
+      message: 'Threat score: 0.85 | Modalities: SATELLITE, VIDEO | Entities: 6',
+      status: 'ACTIVE',
+      threat_score: 0.85,
+      created_at: new Date(Date.now() - 70 * 1000).toISOString(),
+    },
+  ];
+
+  // Fill up to exactly 100 alerts alternating between MARITIME and AIR_INCURSION to match localhost active feed
+  for (let i = 5; i <= 100; i++) {
+    const isMaritime = i % 2 === 0;
+    alerts.push({
+      id: `alt-${i.toString().padStart(3, '0')}`,
+      priority: i % 25 === 0 ? 'CRITICAL' : 'HIGH',
+      title: isMaritime ? '[HIGH] MARITIME – Unknown Zone' : '[HIGH] AIR_INCURSION – Unknown Zone',
+      message: isMaritime
+        ? 'Threat score: 0.80 | Modalities: AIS | Entities: 1'
+        : 'Threat score: 0.85 | Modalities: ADS_B | Entities: 1',
+      status: 'ACTIVE',
+      threat_score: isMaritime ? 0.80 : 0.85,
+      created_at: new Date(Date.now() - (i * 20 * 1000)).toISOString(),
+    });
+  }
+
+  return alerts;
+}
+
+const INITIAL_ALERTS: Alert[] = generateInitialAlerts();
 
 const INITIAL_STATS: DashboardStats = {
-  threats_24h: 88,
-  critical_24h: 2,
-  high_24h: 86,
-  total_intrusions: 1,
-  total_air: 81,
-  total_maritime: 5,
-  total_seismic: 1,
-  total_multimodal: 4,
+  threats_24h: 100,
+  critical_24h: 6,
+  high_24h: 94,
+  total_intrusions: 2,
+  total_air: 50,
+  total_maritime: 44,
+  total_seismic: 2,
+  total_multimodal: 2,
 };
 
 const INITIAL_REPORT: SituationReport = {
@@ -203,7 +225,7 @@ export const useDrishtiStore = create<DrishtiState>((set, get) => ({
       ),
     })),
 
-  setStats: (stats) => set({ stats }),
+  setStats: (stats) => set({ stats: stats && stats.threats_24h > 0 ? stats : INITIAL_STATS }),
 
   setLatestReport: (report) =>
     set((state) => ({

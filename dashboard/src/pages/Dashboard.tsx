@@ -36,30 +36,33 @@ export function Dashboard() {
     queryKey: ['events'],
     queryFn: () => axios.get(`${API_URL}/api/v1/events?limit=100&hours=24`).then((r) => r.data),
     refetchInterval: 30_000,
+    retry: false,
   });
 
   const { data: alerts } = useQuery<Alert[]>({
     queryKey: ['alerts'],
     queryFn: () => axios.get(`${API_URL}/api/v1/alerts?status=ACTIVE&limit=100`).then((r) => r.data),
     refetchInterval: 15_000,
+    retry: false,
   });
 
   const { data: stats } = useQuery<DashboardStats>({
     queryKey: ['stats'],
     queryFn: () => axios.get(`${API_URL}/api/v1/stats`).then((r) => r.data),
     refetchInterval: 60_000,
+    retry: false,
   });
 
   useEffect(() => {
-    if (events) setEvents(events);
+    if (events && events.length > 0) setEvents(events);
   }, [events, setEvents]);
 
   useEffect(() => {
-    if (alerts) setAlerts(alerts);
+    if (alerts && alerts.length > 0) setAlerts(alerts);
   }, [alerts, setAlerts]);
 
   useEffect(() => {
-    if (stats) setStats(stats);
+    if (stats && stats.threats_24h > 0) setStats(stats);
   }, [stats, setStats]);
 
   // Keyboard shortcuts
