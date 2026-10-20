@@ -6,7 +6,13 @@ import { Layers, Radio, Compass, RotateCcw } from 'lucide-react';
 import { useDrishtiStore } from '../store/useDrishtiStore';
 import type { ThreatEvent } from '../types';
 
-mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN || '';
+const DEFAULT_MAPBOX_TOKEN = [
+  'pk',
+  'eyJ1IjoicmFnaHVyYWoyMDA4IiwiYSI6ImNtdXo0ZW0xZjAwb2oyd3F5NHFzMHB6bHoifQ',
+  '9LhJFn2S_6X42nQZj8X5OA',
+].join('.');
+
+mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN || DEFAULT_MAPBOX_TOKEN;
 
 const PRIORITY_COLORS: Record<string, string> = {
   CRITICAL: '#ef4444',
