@@ -116,7 +116,7 @@ export function Dashboard() {
         </div>
 
         {/* Right Alert Queue Sidebar */}
-        <div className="w-80 shrink-0 border-l border-slate-800/80 bg-slate-950/95 overflow-hidden z-10">
+        <div className="w-[430px] shrink-0 border-l border-slate-800/80 bg-slate-950/95 overflow-hidden z-10">
           <AlertPanel />
         </div>
       </div>

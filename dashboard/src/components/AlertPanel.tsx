@@ -71,9 +71,9 @@ export function AlertPanel() {
   return (
     <div className="flex flex-col h-full bg-slate-900/95 border-l border-slate-700">
       {/* Header */}
-      <div className="px-3 py-2 border-b border-slate-700 flex items-center justify-between">
-        <span className="text-sm font-semibold text-slate-200">ACTIVE ALERTS</span>
-        <span className="text-xs bg-red-600 text-white rounded-full px-2 py-0.5">
+      <div className="px-4 py-3 border-b border-slate-700 flex items-center justify-between">
+        <span className="text-base font-extrabold text-slate-100 tracking-wider font-mono">ACTIVE ALERTS</span>
+        <span className="text-sm bg-red-600 text-white font-extrabold rounded-full px-3 py-1 shadow-md">
           {filtered.length}
         </span>
       </div>
@@ -85,10 +85,10 @@ export function AlertPanel() {
             key={tab}
             onClick={() => setActiveTab(tab)}
             className={clsx(
-              'text-xs px-3.5 py-2 whitespace-nowrap transition-colors font-bold tracking-wide',
+              'text-sm px-4 py-2.5 whitespace-nowrap transition-colors font-extrabold tracking-wider',
               activeTab === tab
-                ? 'text-white border-b-2 border-cyan-500 bg-slate-800/90'
-                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/40'
+                ? 'text-white border-b-2 border-cyan-400 bg-slate-800'
+                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
             )}
           >
             {tab}
@@ -97,10 +97,10 @@ export function AlertPanel() {
       </div>
 
       {/* Alert List */}
-      <div className="flex-1 overflow-y-auto space-y-2 p-2">
+      <div className="flex-1 overflow-y-auto space-y-3 p-3">
         {filtered.length === 0 && (
-          <div className="text-center text-slate-500 text-xs mt-8">
-            No active alerts
+          <div className="text-center text-slate-400 text-sm font-mono mt-10">
+            No active alerts in current sector filter
           </div>
         )}
         {filtered.map((alert) => (
@@ -108,45 +108,45 @@ export function AlertPanel() {
             key={alert.id}
             onClick={() => handleSelectAlert(alert)}
             className={clsx(
-              'rounded-lg border p-2.5 cursor-pointer transition-all hover:opacity-90',
+              'rounded-xl border p-4 cursor-pointer transition-all hover:opacity-95 shadow-md',
               PRIORITY_STYLES[alert.priority],
               alert.priority === 'CRITICAL' && 'animate-pulse-border'
             )}
           >
             {/* Priority badge + type icon */}
-            <div className="flex items-center justify-between mb-1">
-              <div className="flex items-center gap-1.5">
-                <span className={clsx('text-[10px] font-bold px-1.5 py-0.5 rounded', PRIORITY_BADGE[alert.priority])}>
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-2">
+                <span className={clsx('text-xs font-black px-2.5 py-1 rounded tracking-wide shadow-sm', PRIORITY_BADGE[alert.priority])}>
                   {alert.priority}
                 </span>
                 {alert.threat_type && (
-                  <span className="text-slate-400">
+                  <span className="text-slate-300">
                     {THREAT_ICON[alert.threat_type as ThreatType]}
                   </span>
                 )}
               </div>
               <button
                 onClick={(e) => { e.stopPropagation(); handleAcknowledge(alert); }}
-                className="text-slate-500 hover:text-green-400 transition-colors"
-                title="Acknowledge"
+                className="text-slate-400 hover:text-green-400 p-1 rounded hover:bg-slate-800 transition"
+                title="Acknowledge Alert"
               >
-                <Check size={13} />
+                <Check size={18} />
               </button>
             </div>
 
             {/* Title */}
-            <div className="text-xs text-slate-200 font-medium leading-tight mb-1">
+            <div className="text-sm sm:text-base text-slate-100 font-extrabold leading-snug mb-1.5 font-mono">
               {alert.title}
             </div>
 
             {/* Message */}
-            <div className="text-[11px] text-slate-400 leading-snug mb-1.5">
+            <div className="text-xs sm:text-sm text-slate-300 font-mono leading-relaxed mb-2.5">
               {alert.message}
             </div>
 
             {/* Threat score bar */}
             {alert.threat_score !== undefined && (
-              <div className="h-1 bg-slate-700 rounded-full overflow-hidden mb-1.5">
+              <div className="h-2 bg-slate-800 rounded-full overflow-hidden mb-2 border border-slate-700/60">
                 <div
                   className={clsx('h-full rounded-full transition-all', {
                     'bg-red-500': alert.priority === 'CRITICAL',
@@ -160,7 +160,7 @@ export function AlertPanel() {
             )}
 
             {/* Time */}
-            <div className="text-[10px] text-slate-500">
+            <div className="text-xs text-slate-400 font-mono font-medium">
               {formatDistanceToNow(new Date(alert.created_at), { addSuffix: true })}
             </div>
           </div>

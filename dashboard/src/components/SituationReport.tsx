@@ -77,49 +77,49 @@ export function SituationReport() {
   return (
     <div className={clsx(
       'bg-slate-900/95 border-t border-slate-700 transition-all duration-300',
-      collapsed ? 'h-9' : 'h-56'
+      collapsed ? 'h-11' : 'h-64'
     )}>
       {/* Header bar */}
       <div
-        className="flex items-center justify-between px-3 py-2 cursor-pointer border-b border-slate-700 hover:bg-slate-800/50"
+        className="flex items-center justify-between px-4 py-3 cursor-pointer border-b border-slate-700 hover:bg-slate-800/60"
         onClick={() => setCollapsed((c) => !c)}
       >
-        <div className="flex items-center gap-2">
-          <FileText size={13} className="text-blue-400" />
-          <span className="text-xs font-semibold text-slate-200">AI SITUATION REPORT</span>
+        <div className="flex items-center gap-2.5">
+          <FileText size={18} className="text-cyan-400" />
+          <span className="text-sm font-extrabold text-slate-100 tracking-wider font-mono">AI SITUATION REPORT</span>
           {latestReport && (
-            <span className={clsx('text-[10px] font-bold px-1.5 py-0.5 rounded', PRIORITY_LABEL[latestReport.priority])}>
+            <span className={clsx('text-xs font-extrabold px-2.5 py-1 rounded shadow-sm', PRIORITY_LABEL[latestReport.priority])}>
               {latestReport.priority}
             </span>
           )}
           {latestReport && (
-            <span className="text-[10px] text-slate-500">
+            <span className="text-xs text-slate-400 font-mono font-medium">
               {formatDistanceToNow(new Date(latestReport.created_at), { addSuffix: true })}
             </span>
           )}
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2.5">
           <button
             onClick={(e) => { e.stopPropagation(); handleGenerate(); }}
             disabled={generating}
-            className="flex items-center gap-1 text-[11px] text-blue-400 hover:text-blue-300 disabled:opacity-50 transition-colors"
+            className="flex items-center gap-1.5 text-xs sm:text-sm font-bold text-cyan-300 hover:text-white bg-cyan-950/80 hover:bg-cyan-900 border border-cyan-500/50 px-3 py-1 rounded-lg transition-colors shadow-sm disabled:opacity-50"
           >
-            <RefreshCw size={11} className={generating ? 'animate-spin' : ''} />
+            <RefreshCw size={14} className={generating ? 'animate-spin' : ''} />
             Generate
           </button>
-          {collapsed ? <ChevronUp size={14} className="text-slate-400" /> : <ChevronDown size={14} className="text-slate-400" />}
+          {collapsed ? <ChevronUp size={18} className="text-slate-300" /> : <ChevronDown size={18} className="text-slate-300" />}
         </div>
       </div>
 
       {/* Report content */}
       {!collapsed && (
-        <div className="h-44 overflow-y-auto px-4 py-2">
+        <div className="h-50 overflow-y-auto px-5 py-3 font-sans">
           {latestReport ? (
-            <div className="prose prose-invert prose-sm max-w-none text-slate-300">
+            <div className="prose prose-invert prose-base max-w-none text-slate-200 leading-relaxed text-sm sm:text-base">
               <ReactMarkdown>{latestReport.content}</ReactMarkdown>
             </div>
           ) : (
-            <div className="flex items-center justify-center h-full text-slate-500 text-sm">
+            <div className="flex items-center justify-center h-full text-slate-400 text-sm font-mono">
               No situation report yet — alerts will auto-generate reports for HIGH/CRITICAL threats.
             </div>
           )}
