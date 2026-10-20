@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Play, ShieldAlert, Waves, Mountain, Crosshair, CheckCircle2, Loader2, X } from 'lucide-react';
 import { playTacticalPing } from '../utils/audioAlert';
+import { useDrishtiStore } from '../store/useDrishtiStore';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
@@ -73,9 +74,44 @@ export function WargameSimulator({ isOpen, onClose }: Props) {
       playTacticalPing('SIMULATE');
       setLastExecuted(scenario.name);
       setTimeout(() => setRunningId(null), 800);
-    } catch (err) {
-      console.error('Failed to trigger scenario:', err);
-      setRunningId(null);
+    } catch {
+      // Standalone GitHub Pages client-side simulation fallback
+      const simulatedEvt = {
+        id: `sim-${scenario.id}-${Date.now()}`,
+        threat_type: scenario.id.includes('maritime')
+          ? ('MARITIME' as const)
+          : scenario.id.includes('seismic')
+          ? ('SEISMIC_ANOMALY' as const)
+          : ('AIR_INCURSION' as const),
+        threat_score: scenario.severity === 'CRITICAL' ? 0.98 : 0.84,
+        priority: scenario.severity,
+        location:
+          scenario.id === 'ladakh_drone_swarm'
+            ? { lat: 34.225, lon: 77.56 }
+            : scenario.id === 'sir_creek_maritime'
+            ? { lat: 23.68, lon: 68.32 }
+            : scenario.id === 'loc_tunnel_seismic'
+            ? { lat: 33.77, lon: 74.12 }
+            : { lat: 27.58, lon: 91.86 },
+        modalities: scenario.modalities as any,
+        entity_count: scenario.id === 'ladakh_drone_swarm' ? 5 : scenario.id === 'ne_border_incursion' ? 8 : 2,
+        description: scenario.desc,
+        is_false_positive: false,
+        occurred_at: new Date().toISOString(),
+      };
+      useDrishtiStore.getState().addEvent(simulatedEvt);
+      useDrishtiStore.getState().addAlert({
+        id: `alt-sim-${Date.now()}`,
+        priority: scenario.severity,
+        title: `${scenario.severity}: ${scenario.name}`,
+        message: scenario.desc,
+        status: 'ACTIVE',
+        threat_score: simulatedEvt.threat_score,
+        created_at: new Date().toISOString(),
+      });
+      playTacticalPing('SIMULATE');
+      setLastExecuted(scenario.name);
+      setTimeout(() => setRunningId(null), 800);
     }
   };
 

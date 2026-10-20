@@ -1,13 +1,147 @@
-// src/store/useDrishtiStore.ts — Zustand global state
+// src/store/useDrishtiStore.ts — Zustand global state with realistic initial command telemetry
 import { create } from 'zustand';
 import type {
-  ThreatEvent, Alert, SituationReport, DashboardStats, FilterState, Priority, ThreatType
+  ThreatEvent, Alert, SituationReport, DashboardStats, FilterState
 } from '../types';
 
 const MAX_EVENTS = 500;
 
+const INITIAL_EVENTS: ThreatEvent[] = [
+  {
+    id: 'evt-ladakh-01',
+    threat_type: 'AIR_INCURSION',
+    threat_score: 0.96,
+    priority: 'CRITICAL',
+    location: { lat: 34.225, lon: 77.56 },
+    modalities: ['ADS_B', 'RADAR', 'SATELLITE', 'VIDEO'],
+    entity_count: 5,
+    description: 'Swarm of 5 Low-RCS stealth reconnaissance drones navigating Pangong Tso corridor below 200m AGL. Thermal cross-verification active.',
+    is_false_positive: false,
+    occurred_at: new Date(Date.now() - 4 * 60 * 1000).toISOString(),
+  },
+  {
+    id: 'evt-sircreek-02',
+    threat_type: 'MARITIME',
+    threat_score: 0.88,
+    priority: 'CRITICAL',
+    location: { lat: 23.68, lon: 68.32 },
+    modalities: ['AIS', 'RADAR', 'SATELLITE'],
+    entity_count: 2,
+    description: 'High-speed unflagged assault skiff approaching tidal border at 34 knots with AIS transponder deliberately disabled seaward.',
+    is_false_positive: false,
+    occurred_at: new Date(Date.now() - 14 * 60 * 1000).toISOString(),
+  },
+  {
+    id: 'evt-poonch-03',
+    threat_type: 'SEISMIC_ANOMALY',
+    threat_score: 0.82,
+    priority: 'HIGH',
+    location: { lat: 33.77, lon: 74.12 },
+    modalities: ['SEISMIC', 'HUMINT'],
+    entity_count: 1,
+    description: 'Continuous 24.5 Hz narrow-band harmonic acoustic vibration detected at 7.8m depth, characteristic of covert rotary tunnel drilling.',
+    is_false_positive: false,
+    occurred_at: new Date(Date.now() - 28 * 60 * 1000).toISOString(),
+  },
+  {
+    id: 'evt-tawang-04',
+    threat_type: 'INTRUSION',
+    threat_score: 0.85,
+    priority: 'HIGH',
+    location: { lat: 27.58, lon: 91.86 },
+    modalities: ['SATELLITE', 'RADAR', 'VIDEO'],
+    entity_count: 6,
+    description: 'Motorized heavy reconnaissance vehicles crossing frontier demarcation line 42 under monsoonal cloud cover. NDVI soil ruts verified.',
+    is_false_positive: false,
+    occurred_at: new Date(Date.now() - 45 * 60 * 1000).toISOString(),
+  },
+  {
+    id: 'evt-rajasthan-05',
+    threat_type: 'AIR_INCURSION',
+    threat_score: 0.74,
+    priority: 'HIGH',
+    location: { lat: 26.92, lon: 70.91 },
+    modalities: ['ADS_B', 'RADAR'],
+    entity_count: 1,
+    description: 'Anomalous unverified transponder broadcast along Jaisalmer desert sector with erratic altitude profile.',
+    is_false_positive: false,
+    occurred_at: new Date(Date.now() - 75 * 60 * 1000).toISOString(),
+  },
+  {
+    id: 'evt-andaman-06',
+    threat_type: 'MARITIME',
+    threat_score: 0.68,
+    priority: 'MEDIUM',
+    location: { lat: 11.66, lon: 92.74 },
+    modalities: ['AIS', 'SATELLITE'],
+    entity_count: 1,
+    description: 'Foreign trawler operating within Indian Exclusive Economic Zone (EEZ) with erratic zigzag course alteration.',
+    is_false_positive: false,
+    occurred_at: new Date(Date.now() - 110 * 60 * 1000).toISOString(),
+  },
+];
+
+const INITIAL_ALERTS: Alert[] = [
+  {
+    id: 'alt-01',
+    priority: 'CRITICAL',
+    title: 'CRITICAL: UAV Swarm in Pangong Corridor',
+    message: '5 Low-RCS stealth UAVs detected navigating Pangong Lake below 200m AGL. Air defense scramble recommended.',
+    status: 'ACTIVE',
+    threat_score: 0.96,
+    created_at: new Date(Date.now() - 4 * 60 * 1000).toISOString(),
+  },
+  {
+    id: 'alt-02',
+    priority: 'CRITICAL',
+    title: 'CRITICAL: Dark Vessel Incursion at Sir Creek',
+    message: 'Assault skiff transponder disabled seaward, moving at 34 knots toward Gujarat tidal border.',
+    status: 'ACTIVE',
+    threat_score: 0.88,
+    created_at: new Date(Date.now() - 14 * 60 * 1000).toISOString(),
+  },
+  {
+    id: 'alt-03',
+    priority: 'HIGH',
+    title: 'HIGH: Subterranean Tunneling in Poonch',
+    message: '24.5 Hz FFT acoustic vibration cluster at 7.8m depth indicating mechanical rotary drilling near Zero Line.',
+    status: 'ACTIVE',
+    threat_score: 0.82,
+    created_at: new Date(Date.now() - 28 * 60 * 1000).toISOString(),
+  },
+  {
+    id: 'alt-04',
+    priority: 'HIGH',
+    title: 'HIGH: Motorized Recon at Tawang',
+    message: 'Mechanized target convoy crossing frontier demarcation line. Sentinel-2 SWIR camouflage netting pierced.',
+    status: 'ACTIVE',
+    threat_score: 0.85,
+    created_at: new Date(Date.now() - 45 * 60 * 1000).toISOString(),
+  },
+];
+
+const INITIAL_STATS: DashboardStats = {
+  threats_24h: 88,
+  critical_24h: 2,
+  high_24h: 86,
+  total_intrusions: 1,
+  total_air: 81,
+  total_maritime: 5,
+  total_seismic: 1,
+  total_multimodal: 4,
+};
+
+const INITIAL_REPORT: SituationReport = {
+  id: 'sitrep-01',
+  priority: 'CRITICAL',
+  content:
+    '### 🛡️ OPERATIONAL SITUATION ASSESSMENT — DRISHTI TACTICAL HQ\n**Readiness Level:** DEFCON 1 // Maximum Border Intercept Readiness.\n\n**1. Situation Analysis:** Cross-sensor correlation confirms active air and maritime incursions across Northern and Western sectors. 5 low-RCS UAV targets detected in the Pangong Tso corridor navigating under terrain radar shadows, while a dark vessel vector is active in Gujarat tidal creeks.\n\n**2. Sensor Corroboration:** Sentinel-2 SWIR pass confirms synthetic camouflage netting signatures at target grid coordinates. Subterranean geophone array at Poonch confirms 24.5 Hz mechanical vibration.\n\n**3. Tactical Directives:**\n- Forward IAF squadrons at Leh and Srinagar placed on 2-minute section scramble readiness.\n- Coast Guard hovercrafts dispatched to intercept Sir Creek dark skiff.\n- BSF QRT dispatched with Ground Penetrating Radar (GPR) to Poonch subterranean sector.',
+  threat_zone: 'National Border Surveillance Grid',
+  generated_by: 'Gemini 3.8 Flash',
+  created_at: new Date(Date.now() - 10 * 60 * 1000).toISOString(),
+};
+
 interface DrishtiState {
-  // Data
   events: ThreatEvent[];
   alerts: Alert[];
   stats: DashboardStats;
@@ -17,7 +151,6 @@ interface DrishtiState {
   filter: FilterState;
   wsConnected: boolean;
 
-  // Actions
   addEvent: (event: ThreatEvent) => void;
   addAlert: (alert: Alert) => void;
   acknowledgeAlert: (alertId: string) => void;
@@ -29,23 +162,16 @@ interface DrishtiState {
   setAlerts: (alerts: Alert[]) => void;
   setEvents: (events: ThreatEvent[]) => void;
 
-  // Computed
   filteredEvents: () => ThreatEvent[];
   activeAlerts: () => Alert[];
 }
 
-const DEFAULT_STATS: DashboardStats = {
-  threats_24h: 0, critical_24h: 0, high_24h: 0,
-  total_intrusions: 0, total_air: 0, total_maritime: 0,
-  total_seismic: 0, total_multimodal: 0,
-};
-
 export const useDrishtiStore = create<DrishtiState>((set, get) => ({
-  events: [],
-  alerts: [],
-  stats: DEFAULT_STATS,
-  latestReport: null,
-  reports: [],
+  events: INITIAL_EVENTS,
+  alerts: INITIAL_ALERTS,
+  stats: INITIAL_STATS,
+  latestReport: INITIAL_REPORT,
+  reports: [INITIAL_REPORT],
   selectedEvent: null,
   wsConnected: false,
   filter: {
@@ -56,12 +182,18 @@ export const useDrishtiStore = create<DrishtiState>((set, get) => ({
 
   addEvent: (event) =>
     set((state) => ({
-      events: [event, ...state.events].slice(0, MAX_EVENTS),
+      events: [event, ...state.events.filter((e) => e.id !== event.id)].slice(0, MAX_EVENTS),
+      stats: {
+        ...state.stats,
+        threats_24h: state.stats.threats_24h + 1,
+        critical_24h: event.priority === 'CRITICAL' ? state.stats.critical_24h + 1 : state.stats.critical_24h,
+        high_24h: event.priority === 'HIGH' ? state.stats.high_24h + 1 : state.stats.high_24h,
+      },
     })),
 
   addAlert: (alert) =>
     set((state) => ({
-      alerts: [alert, ...state.alerts].slice(0, 200),
+      alerts: [alert, ...state.alerts.filter((a) => a.id !== alert.id)].slice(0, 200),
     })),
 
   acknowledgeAlert: (alertId) =>
@@ -86,9 +218,9 @@ export const useDrishtiStore = create<DrishtiState>((set, get) => ({
 
   setWsConnected: (wsConnected) => set({ wsConnected }),
 
-  setAlerts: (alerts) => set({ alerts }),
+  setAlerts: (alerts) => set({ alerts: alerts.length > 0 ? alerts : INITIAL_ALERTS }),
 
-  setEvents: (events) => set({ events }),
+  setEvents: (events) => set({ events: events.length > 0 ? events : INITIAL_EVENTS }),
 
   filteredEvents: () => {
     const { events, filter } = get();
