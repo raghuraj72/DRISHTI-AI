@@ -12,6 +12,9 @@ import {
   Activity,
   Zap,
   Satellite,
+  Camera,
+  Award,
+  Layers,
 } from 'lucide-react';
 import { useDrishtiStore } from '../store/useDrishtiStore';
 import { DEFCONBadge } from './DEFCONBadge';
@@ -46,6 +49,9 @@ interface Props {
   onOpenSensors: () => void;
   onOpenSeismic: () => void;
   onOpenSatellite: () => void;
+  onOpenUAV: () => void;
+  onOpenAccuracy: () => void;
+  onOpenFusionMatrix: () => void;
 }
 
 export function StatsBar({
@@ -56,6 +62,9 @@ export function StatsBar({
   onOpenSensors,
   onOpenSeismic,
   onOpenSatellite,
+  onOpenUAV,
+  onOpenAccuracy,
+  onOpenFusionMatrix,
 }: Props) {
   const stats = useDrishtiStore((s) => s.stats);
   const [clock, setClock] = useState('');
@@ -143,63 +152,94 @@ export function StatsBar({
           {isMuted ? <VolumeX size={24} /> : <Volume2 size={24} />}
         </button>
 
+        {/* Live UAV Reconnaissance Gimbal Camera Button */}
+        <button
+          onClick={onOpenUAV}
+          className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-cyan-950 hover:bg-cyan-900 border border-cyan-400 text-cyan-200 text-sm font-mono font-black tracking-wide transition shadow-lg hover:scale-[1.03]"
+          title="Open Live Tactical UAV Reconnaissance EO/IR Gimbal & YOLO Tracking"
+        >
+          <Camera size={20} className="text-cyan-400 animate-pulse" />
+          <span className="hidden sm:inline">UAV RECON</span>
+          <span className="w-2 h-2 rounded-full bg-red-500 animate-ping" />
+        </button>
+
+        {/* Defence AI Accuracy & Verification Suite Button */}
+        <button
+          onClick={onOpenAccuracy}
+          className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-emerald-950 hover:bg-emerald-900 border border-emerald-400 text-emerald-200 text-sm font-mono font-black tracking-wide transition shadow-lg hover:scale-[1.03]"
+          title="Open Defence AI Accuracy Benchmarks & Automated Monte-Carlo Verification Suite"
+        >
+          <Award size={20} className="text-emerald-400" />
+          <span className="hidden sm:inline">ACCURACY & TESTS</span>
+        </button>
+
+        {/* Cross-Modal Attention Fusion Matrix Button */}
+        <button
+          onClick={onOpenFusionMatrix}
+          className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-purple-950 hover:bg-purple-900 border border-purple-400 text-purple-200 text-sm font-mono font-black tracking-wide transition shadow-lg hover:scale-[1.03]"
+          title="Open Explainable Cross-Modal Attention Transformer Fusion Matrix"
+        >
+          <Layers size={20} className="text-purple-400" />
+          <span className="hidden sm:inline">FUSION MATRIX</span>
+        </button>
+
         {/* Multi-Modal Sensor Grid Telemetry Button */}
         <button
           onClick={onOpenSensors}
-          className="flex items-center gap-2.5 px-5 py-3 rounded-2xl bg-emerald-950 hover:bg-emerald-900 border border-emerald-500/70 text-emerald-300 hover:text-emerald-100 text-base font-mono font-black tracking-wide transition shadow-lg hover:scale-[1.03]"
+          className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 hover:text-white text-sm font-mono font-black tracking-wide transition shadow-lg hover:scale-[1.03]"
           title="Open Multi-Modal Sensor Grid Health & Ingestion Telemetry"
         >
-          <Activity size={22} className="text-emerald-400 animate-pulse" />
-          <span className="hidden sm:inline">SENSOR GRID</span>
+          <Activity size={20} className="text-emerald-400" />
+          <span className="hidden sm:inline">SENSORS</span>
         </button>
 
         {/* Subterranean Seismic FFT Analyzer Button */}
         <button
           onClick={onOpenSeismic}
-          className="flex items-center gap-2.5 px-5 py-3 rounded-2xl bg-yellow-950 hover:bg-yellow-900 border border-yellow-500/70 text-yellow-300 hover:text-yellow-100 text-base font-mono font-black tracking-wide transition shadow-lg hover:scale-[1.03]"
+          className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 hover:text-white text-sm font-mono font-black tracking-wide transition shadow-lg hover:scale-[1.03]"
           title="Open Subterranean Acoustic & Seismic Tunneling Frequency Analyzer"
         >
-          <Zap size={22} className="text-yellow-400" />
-          <span className="hidden sm:inline">SEISMIC INTEL</span>
+          <Zap size={20} className="text-yellow-400" />
+          <span className="hidden sm:inline">SEISMIC</span>
         </button>
 
         {/* Sentinel-2 Multi-Spectral Camouflage Inspector Button */}
         <button
           onClick={onOpenSatellite}
-          className="flex items-center gap-2.5 px-5 py-3 rounded-2xl bg-blue-950 hover:bg-blue-900 border border-blue-500/70 text-blue-300 hover:text-blue-100 text-base font-mono font-black tracking-wide transition shadow-lg hover:scale-[1.03]"
+          className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 hover:text-white text-sm font-mono font-black tracking-wide transition shadow-lg hover:scale-[1.03]"
           title="Open Sentinel-2 Multi-Spectral Camouflage Defeat & Surface Change Inspector"
         >
-          <Satellite size={22} className="text-blue-400" />
-          <span className="hidden sm:inline">SATELLITE INTEL</span>
+          <Satellite size={20} className="text-blue-400" />
+          <span className="hidden sm:inline">SATELLITE</span>
         </button>
 
         {/* Wargame Simulator Button */}
         <button
           onClick={onOpenSimulator}
-          className="flex items-center gap-2.5 px-5 py-3 rounded-2xl bg-red-950 hover:bg-red-900 border border-red-500/70 text-red-300 hover:text-red-100 text-base font-mono font-black tracking-wide transition shadow-lg hover:scale-[1.03]"
+          className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-red-950 hover:bg-red-900 border border-red-500/70 text-red-300 hover:text-red-100 text-sm font-mono font-black tracking-wide transition shadow-lg hover:scale-[1.03]"
           title="Open Tactical Wargame Incursion Simulator (Jury Demo)"
         >
-          <Crosshair size={22} className="text-red-400" />
+          <Crosshair size={20} className="text-red-400" />
           <span className="hidden sm:inline">WARGAME SIM</span>
         </button>
 
         {/* Tactical AI Copilot Button */}
         <button
           onClick={onOpenCopilot}
-          className="flex items-center gap-2.5 px-5 py-3 rounded-2xl bg-cyan-950 hover:bg-cyan-900 border border-cyan-500/70 text-cyan-300 hover:text-cyan-100 text-base font-mono font-black tracking-wide transition shadow-lg hover:scale-[1.03]"
+          className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-cyan-950 hover:bg-cyan-900 border border-cyan-500/70 text-cyan-300 hover:text-cyan-100 text-sm font-mono font-black tracking-wide transition shadow-lg hover:scale-[1.03]"
           title="Open Drishti AI Tactical Copilot (Gemini 3.8 Flash)"
         >
-          <Bot size={22} className="text-cyan-400 animate-pulse" />
+          <Bot size={20} className="text-cyan-400 animate-pulse" />
           <span className="hidden sm:inline">AI COPILOT</span>
         </button>
 
         {/* SITREP Export Button */}
         <button
           onClick={onOpenSitrep}
-          className="flex items-center gap-2.5 px-5 py-3 rounded-2xl bg-slate-900 hover:bg-slate-800 border border-slate-600 text-slate-200 hover:text-white text-base font-mono font-black tracking-wide transition shadow-lg hover:scale-[1.03]"
+          className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-slate-900 hover:bg-slate-800 border border-slate-600 text-slate-200 hover:text-white text-sm font-mono font-black tracking-wide transition shadow-lg hover:scale-[1.03]"
           title="Export Official Military Situation Report (Print / PDF)"
         >
-          <FileText size={22} className="text-amber-400" />
+          <FileText size={20} className="text-amber-400" />
           <span className="hidden sm:inline">SITREP</span>
         </button>
       </div>

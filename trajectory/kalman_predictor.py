@@ -13,7 +13,33 @@ from typing import Dict, List, Optional, Tuple
 import numpy as np
 import torch
 import torch.nn as nn
-from filterpy.kalman import KalmanFilter
+try:
+    from filterpy.kalman import KalmanFilter
+except ImportError:
+    class KalmanFilter:
+        """Pure NumPy fallback for 6-state constant acceleration Kalman Filter."""
+        def __init__(self, dim_x: int = 6, dim_z: int = 2):
+            self.dim_x = dim_x
+            self.dim_z = dim_z
+            self.x = np.zeros((dim_x, 1))
+            self.F = np.eye(dim_x)
+            self.H = np.zeros((dim_z, dim_x))
+            self.R = np.eye(dim_z)
+            self.Q = np.eye(dim_x)
+            self.P = np.eye(dim_x)
+
+        def predict(self):
+            self.x = self.F @ self.x
+            self.P = self.F @ self.P @ self.F.T + self.Q
+
+        def update(self, z):
+            y = z - self.H @ self.x
+            S = self.H @ self.P @ self.H.T + self.R
+            K = self.P @ self.H.T @ np.linalg.pinv(S)
+            self.x = self.x + K @ y
+            I = np.eye(self.dim_x)
+            self.P = (I - K @ self.H) @ self.P
+
 from loguru import logger
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")

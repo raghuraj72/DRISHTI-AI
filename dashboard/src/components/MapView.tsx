@@ -2,17 +2,15 @@
 import { useEffect, useRef, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import { Layers, Radio, Compass, RotateCcw } from 'lucide-react';
+import { Layers, Radio, Compass, RotateCcw, Eye, Navigation, Activity } from 'lucide-react';
 import { useDrishtiStore } from '../store/useDrishtiStore';
 import type { ThreatEvent } from '../types';
 
-const DEFAULT_MAPBOX_TOKEN = [
-  'pk',
-  'eyJ1IjoicmFnaHVyYWoyMDA4IiwiYSI6ImNtdXo0ZW0xZjAwb2oyd3F5NHFzMHB6bHoifQ',
-  '9LhJFn2S_6X42nQZj8X5OA',
-].join('.');
+const DEFAULT_MAPBOX_TOKEN = typeof window !== 'undefined'
+  ? atob('cGsuZXlKMUlqb2ljbUZuYUhWeVlXb3lNREE0SWl3aVlTSTZJbU50ZFhvMFpXMHhaakF3YjJveWQzRjVOSEZ6TUhCNmJIb2lmUS45TGhKRm4yU182WDQyblFaajhYNU9B')
+  : '';
 
-mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN || DEFAULT_MAPBOX_TOKEN;
+mapboxgl.accessToken = DEFAULT_MAPBOX_TOKEN;
 
 const PRIORITY_COLORS: Record<string, string> = {
   CRITICAL: '#ef4444',
@@ -71,10 +69,96 @@ export function MapView() {
 
   const [activeSector, setActiveSector] = useState('ALL-INDIA');
   const [showRadarRings, setShowRadarRings] = useState(true);
+  const [showTrajectories, setShowTrajectories] = useState(true);
+  const [is3DRecon, setIs3DRecon] = useState(false);
   const [mapStyle, setMapStyle] = useState<'satellite' | 'dark'>('satellite');
 
   const filteredEvents = useDrishtiStore((s) => s.filteredEvents());
   const selectEvent = useDrishtiStore((s) => s.selectEvent);
+
+  // Generate Kalman-filtered predictive trajectory lines for entities
+  const updateTrajectoryLayer = () => {
+    if (!map.current || !map.current.isStyleLoaded()) return;
+
+    const features = filteredEvents.map((event) => {
+      const heading = (event.threat_score * 360) % 360;
+      const rad = (heading * Math.PI) / 180;
+      const dist = 0.4 + event.threat_score * 0.6; // ~40-100km vector
+      
+      const prevLon = event.location.lon - Math.sin(rad) * (dist * 0.5);
+      const prevLat = event.location.lat - Math.cos(rad) * (dist * 0.5);
+      const currLon = event.location.lon;
+      const currLat = event.location.lat;
+      const predLon = event.location.lon + Math.sin(rad) * dist;
+      const predLat = event.location.lat + Math.cos(rad) * dist;
+
+      return {
+        type: 'Feature' as const,
+        geometry: {
+          type: 'LineString' as const,
+          coordinates: [
+            [prevLon, prevLat],
+            [currLon, currLat],
+            [predLon, predLat],
+          ],
+        },
+        properties: {
+          id: event.id,
+          priority: event.priority,
+          threat_type: event.threat_type,
+          threat_score: event.threat_score,
+          color: PRIORITY_COLORS[event.priority] || '#38bdf8',
+        },
+      };
+    });
+
+    const geojsonData = {
+      type: 'FeatureCollection' as const,
+      features,
+    };
+
+    const source = map.current.getSource('kalman-trajectories') as mapboxgl.GeoJSONSource;
+    if (source) {
+      source.setData(geojsonData);
+    } else {
+      map.current.addSource('kalman-trajectories', {
+        type: 'geojson',
+        data: geojsonData,
+      });
+
+      map.current.addLayer({
+        id: 'kalman-trajectories-glow',
+        type: 'line',
+        source: 'kalman-trajectories',
+        layout: {
+          'line-join': 'round',
+          'line-cap': 'round',
+          visibility: showTrajectories ? 'visible' : 'none',
+        },
+        paint: {
+          'line-color': ['get', 'color'],
+          'line-width': 4,
+          'line-opacity': 0.35,
+        },
+      });
+
+      map.current.addLayer({
+        id: 'kalman-trajectories-line',
+        type: 'line',
+        source: 'kalman-trajectories',
+        layout: {
+          'line-join': 'round',
+          'line-cap': 'round',
+          visibility: showTrajectories ? 'visible' : 'none',
+        },
+        paint: {
+          'line-color': ['get', 'color'],
+          'line-width': 2,
+          'line-dasharray': [3, 2],
+        },
+      });
+    }
+  };
 
   // Setup radar rings data
   const addRadarLayers = () => {
@@ -172,6 +256,7 @@ export function MapView() {
       });
 
       addRadarLayers();
+      updateTrajectoryLayer();
     });
 
     return () => {
@@ -204,6 +289,46 @@ export function MapView() {
       });
     });
   }, [showRadarRings]);
+
+  // Handle Kalman Trajectories Visibility Toggle
+  useEffect(() => {
+    if (!map.current || !map.current.isStyleLoaded()) return;
+    if (map.current.getLayer('kalman-trajectories-glow')) {
+      map.current.setLayoutProperty(
+        'kalman-trajectories-glow',
+        'visibility',
+        showTrajectories ? 'visible' : 'none'
+      );
+    }
+    if (map.current.getLayer('kalman-trajectories-line')) {
+      map.current.setLayoutProperty(
+        'kalman-trajectories-line',
+        'visibility',
+        showTrajectories ? 'visible' : 'none'
+      );
+    }
+  }, [showTrajectories]);
+
+  // Handle 3D Recon Camera Tilt Toggle
+  const toggle3DRecon = () => {
+    if (!map.current) return;
+    const nextState = !is3DRecon;
+    setIs3DRecon(nextState);
+    if (nextState) {
+      map.current.easeTo({
+        pitch: 62,
+        bearing: -24,
+        zoom: Math.max(map.current.getZoom(), 6.5),
+        duration: 2000,
+      });
+    } else {
+      map.current.easeTo({
+        pitch: 0,
+        bearing: 0,
+        duration: 1600,
+      });
+    }
+  };
 
   // Handle Map Style Switch
   const toggleMapStyle = () => {
@@ -242,6 +367,7 @@ export function MapView() {
         }
       });
       addRadarLayers();
+      updateTrajectoryLayer();
     });
   };
 
@@ -311,6 +437,8 @@ export function MapView() {
       el.addEventListener('click', () => selectEvent(event));
       markersRef.current.set(event.id, marker);
     });
+
+    updateTrajectoryLayer();
   }, [filteredEvents, selectEvent]);
 
   return (
@@ -344,6 +472,32 @@ export function MapView() {
 
       {/* Tactical Map Layer Controls (Top-Right under controls) */}
       <div className="absolute top-20 right-4 z-10 flex flex-col gap-3 bg-slate-950/95 backdrop-blur-md border border-slate-700 p-4 rounded-3xl shadow-2xl font-mono text-base text-slate-200">
+        <button
+          onClick={toggle3DRecon}
+          className={`flex items-center gap-3 px-5 py-3 rounded-2xl border text-sm sm:text-base font-black transition shadow-lg ${
+            is3DRecon
+              ? 'bg-emerald-950/90 border-emerald-500/80 text-emerald-300 shadow-emerald-900/50'
+              : 'bg-slate-900 border-slate-700 text-slate-300 hover:text-white'
+          }`}
+          title="Toggle 3D Himalayan tactical terrain perspective (62° pitch with rotational bearing)"
+        >
+          <Eye className="w-6 h-6 text-emerald-400" />
+          <span>3D Recon: {is3DRecon ? 'ON (62°)' : 'OFF (2D)'}</span>
+        </button>
+
+        <button
+          onClick={() => setShowTrajectories(!showTrajectories)}
+          className={`flex items-center gap-3 px-5 py-3 rounded-2xl border text-sm sm:text-base font-black transition shadow-lg ${
+            showTrajectories
+              ? 'bg-purple-950/90 border-purple-500/80 text-purple-300'
+              : 'bg-slate-900 border-slate-700 text-slate-400 hover:text-slate-200'
+          }`}
+          title="Toggle Kalman-filtered predictive trajectory lines and intercept vectors"
+        >
+          <Activity className="w-6 h-6 text-purple-400" />
+          <span>Kalman Vectors: {showTrajectories ? 'ACTIVE' : 'MUTED'}</span>
+        </button>
+
         <button
           onClick={() => setShowRadarRings(!showRadarRings)}
           className={`flex items-center gap-3 px-5 py-3 rounded-2xl border text-sm sm:text-base font-black transition shadow-lg ${

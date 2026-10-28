@@ -13,10 +13,15 @@ import {
   Navigation,
   Clock,
   ShieldAlert,
+  Send,
+  CheckCircle2,
+  Radio,
+  Crosshair,
 } from 'lucide-react';
 import { formatDistanceToNow, format } from 'date-fns';
 import clsx from 'clsx';
 import { useDrishtiStore } from '../store/useDrishtiStore';
+import { playTacticalPing } from '../utils/audioAlert';
 import type { ThreatType, Priority } from '../types';
 
 const THREAT_ICONS: Record<ThreatType, React.ReactNode> = {
@@ -73,6 +78,8 @@ export function EventDetailModal() {
   const selectedEvent = useDrishtiStore((s) => s.selectedEvent);
   const selectEvent = useDrishtiStore((s) => s.selectEvent);
   const [showIntercept, setShowIntercept] = useState(false);
+  const [selectedSOP, setSelectedSOP] = useState<string>('IAF_CAP');
+  const [dispatchResult, setDispatchResult] = useState<{ code: string; sop: string; time: string } | null>(null);
 
   if (!selectedEvent) return null;
 
@@ -267,6 +274,73 @@ export function EventDetailModal() {
                   </div>
                 </div>
               </div>
+            )}
+          </div>
+
+          {/* Tactical Countermeasure Response Authorization & Dispatch Matrix */}
+          <div className="border border-red-500/40 rounded-xl p-4 bg-red-950/20 font-mono">
+            <div className="flex items-center justify-between mb-2.5">
+              <div className="flex items-center gap-2 text-red-300 font-bold text-sm">
+                <Crosshair className="w-5 h-5 text-red-400" />
+                <span>COMMAND COUNTERMEASURE AUTHORIZATION MATRIX</span>
+              </div>
+              <span className="text-[10px] px-2 py-0.5 rounded bg-red-900/60 text-red-300 border border-red-500 font-bold">
+                OODA FAST-TRACK
+              </span>
+            </div>
+
+            <p className="text-xs text-slate-300 font-sans mb-3">
+              Select verified military countermeasure based on multi-modal threat classification. Authorizing logs an official dispatch directive with Integrated Defence Staff.
+            </p>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs mb-3">
+              {[
+                { id: 'IAF_CAP', label: '✈️ Scramble IAF QRA CAP (Mach 1.2)', unit: 'IAF Forward Section' },
+                { id: 'BSF_QRT', label: '🛡️ Dispatch BSF QRT Vector Alpha', unit: 'Border Security Force' },
+                { id: 'EW_JAMMER', label: '⚡ Directional C-UAS EW Soft-Kill', unit: 'Army Electronic Warfare' },
+                { id: 'RISAT_PASS', label: '🛰️ Priority Tasking: RISAT SAR Pass', unit: 'ISRO Defence Tasking' },
+              ].map((opt) => (
+                <button
+                  key={opt.id}
+                  onClick={() => setSelectedSOP(opt.id)}
+                  className={`p-2.5 rounded-lg border text-left transition flex flex-col justify-between gap-1 ${
+                    selectedSOP === opt.id
+                      ? 'bg-red-950/90 border-red-500 text-white shadow-md'
+                      : 'bg-slate-900/80 border-slate-800 text-slate-300 hover:border-slate-700'
+                  }`}
+                >
+                  <span className="font-bold text-xs">{opt.label}</span>
+                  <span className="text-[10px] text-slate-400 font-sans">{opt.unit}</span>
+                </button>
+              ))}
+            </div>
+
+            {dispatchResult ? (
+              <div className="bg-emerald-950/70 border border-emerald-500 p-3 rounded-xl flex items-center justify-between text-xs text-emerald-300">
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
+                  <div>
+                    <div className="font-bold">DISPATCH DIRECTIVE AUTHORIZED: {dispatchResult.code}</div>
+                    <div className="text-[10px] text-slate-300 font-sans">
+                      Unit acknowledged order at {dispatchResult.time}. Intercept clock active.
+                    </div>
+                  </div>
+                </div>
+                <span className="text-[10px] bg-emerald-900 px-2 py-0.5 rounded font-bold">STATUS: EN ROUTE</span>
+              </div>
+            ) : (
+              <button
+                onClick={() => {
+                  const code = `OP-CHETAK-${Math.floor(1000 + Math.random() * 9000)}`;
+                  const nowStr = format(new Date(), 'HH:mm:ss');
+                  setDispatchResult({ code, sop: selectedSOP, time: nowStr });
+                  playTacticalPing('DISPATCH');
+                }}
+                className="w-full flex items-center justify-center gap-2 py-2.5 px-4 bg-red-600 hover:bg-red-500 text-white font-bold text-xs rounded-xl shadow-lg transition tracking-wider"
+              >
+                <Send className="w-4 h-4" />
+                <span>AUTHORIZE & DISPATCH COUNTERMEASURE DIRECTIVE</span>
+              </button>
             )}
           </div>
 

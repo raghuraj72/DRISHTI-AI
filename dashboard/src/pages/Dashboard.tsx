@@ -14,6 +14,9 @@ import { SitrepExportModal } from '../components/SitrepExportModal';
 import { SensorGridModal } from '../components/SensorGridModal';
 import { SeismicSpectrogramModal } from '../components/SeismicSpectrogramModal';
 import { SatellitePassModal } from '../components/SatellitePassModal';
+import { TacticalUAVModal } from '../components/TacticalUAVModal';
+import { ModelAccuracyModal } from '../components/ModelAccuracyModal';
+import { FusionMatrixModal } from '../components/FusionMatrixModal';
 import { useWebSocket } from '../hooks/useWebSocket';
 import { useDrishtiStore } from '../store/useDrishtiStore';
 import type { ThreatEvent, Alert, DashboardStats } from '../types';
@@ -30,6 +33,9 @@ export function Dashboard() {
   const [isSensorsOpen, setIsSensorsOpen] = useState(false);
   const [isSeismicOpen, setIsSeismicOpen] = useState(false);
   const [isSatelliteOpen, setIsSatelliteOpen] = useState(false);
+  const [isUAVOpen, setIsUAVOpen] = useState(false);
+  const [isAccuracyOpen, setIsAccuracyOpen] = useState(false);
+  const [isFusionOpen, setIsFusionOpen] = useState(false);
 
   // Initial data fetch
   const { data: events } = useQuery<ThreatEvent[]>({
@@ -76,6 +82,9 @@ export function Dashboard() {
         setIsSensorsOpen(false);
         setIsSeismicOpen(false);
         setIsSatelliteOpen(false);
+        setIsUAVOpen(false);
+        setIsAccuracyOpen(false);
+        setIsFusionOpen(false);
       }
     };
     window.addEventListener('keydown', handler);
@@ -93,6 +102,9 @@ export function Dashboard() {
         onOpenSensors={() => setIsSensorsOpen(true)}
         onOpenSeismic={() => setIsSeismicOpen(true)}
         onOpenSatellite={() => setIsSatelliteOpen(true)}
+        onOpenUAV={() => setIsUAVOpen(true)}
+        onOpenAccuracy={() => setIsAccuracyOpen(true)}
+        onOpenFusionMatrix={() => setIsFusionOpen(true)}
       />
 
       {/* Main Tactical Grid */}
@@ -153,6 +165,21 @@ export function Dashboard() {
       <SatellitePassModal
         isOpen={isSatelliteOpen}
         onClose={() => setIsSatelliteOpen(false)}
+      />
+
+      <TacticalUAVModal
+        isOpen={isUAVOpen}
+        onClose={() => setIsUAVOpen(false)}
+      />
+
+      <ModelAccuracyModal
+        isOpen={isAccuracyOpen}
+        onClose={() => setIsAccuracyOpen(false)}
+      />
+
+      <FusionMatrixModal
+        isOpen={isFusionOpen}
+        onClose={() => setIsFusionOpen(false)}
       />
     </div>
   );
