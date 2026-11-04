@@ -15,6 +15,8 @@ import {
   Camera,
   Award,
   Layers,
+  Radio as RadioIcon,
+  Database,
 } from 'lucide-react';
 import { useDrishtiStore } from '../store/useDrishtiStore';
 import { DEFCONBadge } from './DEFCONBadge';
@@ -52,6 +54,8 @@ interface Props {
   onOpenUAV: () => void;
   onOpenAccuracy: () => void;
   onOpenFusionMatrix: () => void;
+  onOpenSigintEW: () => void;
+  onOpenDatasets: () => void;
 }
 
 export function StatsBar({
@@ -65,6 +69,8 @@ export function StatsBar({
   onOpenUAV,
   onOpenAccuracy,
   onOpenFusionMatrix,
+  onOpenSigintEW,
+  onOpenDatasets,
 }: Props) {
   const stats = useDrishtiStore((s) => s.stats);
   const [clock, setClock] = useState('');
@@ -181,6 +187,26 @@ export function StatsBar({
         >
           <Layers size={20} className="text-purple-400" />
           <span className="hidden sm:inline">FUSION MATRIX</span>
+        </button>
+
+        {/* SIGINT & Electronic Warfare RF Spectrum Button */}
+        <button
+          onClick={onOpenSigintEW}
+          className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-indigo-950 hover:bg-indigo-900 border border-indigo-400 text-indigo-200 text-sm font-mono font-black tracking-wide transition shadow-lg hover:scale-[1.03]"
+          title="Open SIGINT Electronic Warfare (EW) Passive RF Intercept & Spectrum Analyzer"
+        >
+          <RadioIcon size={20} className="text-indigo-400 animate-pulse" />
+          <span className="hidden sm:inline">SIGINT / EW</span>
+        </button>
+
+        {/* Defense Intelligence Datasets & Benchmarks Button */}
+        <button
+          onClick={onOpenDatasets}
+          className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-emerald-950 hover:bg-emerald-900 border border-emerald-400 text-emerald-200 text-sm font-mono font-black tracking-wide transition shadow-lg hover:scale-[1.03]"
+          title="Open Ground-Truth Defense Telemetry Datasets & 1000-Scenario Evaluation Corpus"
+        >
+          <Database size={20} className="text-emerald-400" />
+          <span className="hidden sm:inline">DATASETS (1K)</span>
         </button>
 
         {/* Multi-Modal Sensor Grid Telemetry Button */}

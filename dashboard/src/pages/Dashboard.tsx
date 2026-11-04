@@ -17,6 +17,8 @@ import { SatellitePassModal } from '../components/SatellitePassModal';
 import { TacticalUAVModal } from '../components/TacticalUAVModal';
 import { ModelAccuracyModal } from '../components/ModelAccuracyModal';
 import { FusionMatrixModal } from '../components/FusionMatrixModal';
+import { SigintEWModal } from '../components/SigintEWModal';
+import { DefenseDatasetsModal } from '../components/DefenseDatasetsModal';
 import { useWebSocket } from '../hooks/useWebSocket';
 import { useDrishtiStore } from '../store/useDrishtiStore';
 import type { ThreatEvent, Alert, DashboardStats } from '../types';
@@ -36,6 +38,8 @@ export function Dashboard() {
   const [isUAVOpen, setIsUAVOpen] = useState(false);
   const [isAccuracyOpen, setIsAccuracyOpen] = useState(false);
   const [isFusionOpen, setIsFusionOpen] = useState(false);
+  const [isSigintOpen, setIsSigintOpen] = useState(false);
+  const [isDatasetsOpen, setIsDatasetsOpen] = useState(false);
 
   // Initial data fetch
   const { data: events } = useQuery<ThreatEvent[]>({
@@ -85,6 +89,8 @@ export function Dashboard() {
         setIsUAVOpen(false);
         setIsAccuracyOpen(false);
         setIsFusionOpen(false);
+        setIsSigintOpen(false);
+        setIsDatasetsOpen(false);
       }
     };
     window.addEventListener('keydown', handler);
@@ -105,6 +111,8 @@ export function Dashboard() {
         onOpenUAV={() => setIsUAVOpen(true)}
         onOpenAccuracy={() => setIsAccuracyOpen(true)}
         onOpenFusionMatrix={() => setIsFusionOpen(true)}
+        onOpenSigintEW={() => setIsSigintOpen(true)}
+        onOpenDatasets={() => setIsDatasetsOpen(true)}
       />
 
       {/* Main Tactical Grid */}
@@ -180,6 +188,16 @@ export function Dashboard() {
       <FusionMatrixModal
         isOpen={isFusionOpen}
         onClose={() => setIsFusionOpen(false)}
+      />
+
+      <SigintEWModal
+        isOpen={isSigintOpen}
+        onClose={() => setIsSigintOpen(false)}
+      />
+
+      <DefenseDatasetsModal
+        isOpen={isDatasetsOpen}
+        onClose={() => setIsDatasetsOpen(false)}
       />
     </div>
   );
